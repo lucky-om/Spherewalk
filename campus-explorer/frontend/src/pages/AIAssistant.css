@@ -1,0 +1,269 @@
+/* AI Assistant */
+.ai-page {
+    background: var(--bg);
+}
+
+.ai-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ai-header-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+}
+
+.ai-avatar-box {
+    font-size: 2rem;
+}
+
+.ai-header-text h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.ai-header-text p {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    margin-top: 2px;
+}
+
+/* Chat */
+.ai-chat {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 2px;
+    min-height: 300px;
+    max-height: 440px;
+}
+
+.chat-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.chat-row.user {
+    flex-direction: row-reverse;
+}
+
+.chat-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.bubble {
+    max-width: 72%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.bubble.bot {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+}
+
+.bubble.user {
+    background: var(--brand);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+/* Typing indicator */
+.typing-dots {
+    display: flex;
+    gap: 4px;
+    padding: 6px 4px;
+}
+
+.typing-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--text-3);
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Response cards inside bubbles */
+.resp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+}
+
+.resp-card-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.resp-profile {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.resp-profile-icon {
+    font-size: 1.6rem;
+}
+
+.resp-profile-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.resp-profile-role {
+    font-size: 0.78rem;
+    color: var(--brand);
+}
+
+.resp-profile-detail {
+    font-size: 0.78rem;
+    color: var(--text-2);
+    margin-top: 2px;
+}
+
+.resp-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.resp-stat-val {
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.resp-stat-lbl {
+    font-size: 0.68rem;
+    color: var(--text-2);
+}
+
+.resp-companies {
+    font-size: 0.75rem;
+    color: var(--text-2);
+}
+
+.resp-event+.resp-event {
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+    padding-top: 6px;
+}
+
+.resp-event-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.resp-event-meta {
+    font-size: 0.75rem;
+    color: var(--brand);
+}
+
+.resp-event-desc {
+    font-size: 0.75rem;
+    color: var(--text-2);
+}
+
+.resp-loc-tag {
+    font-size: 0.78rem;
+    color: var(--text-2);
+}
+
+.resp-emrg-row {
+    font-size: 0.82rem;
+    padding: 3px 0;
+}
+
+.resp-emrg-row a {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.resp-adm-row {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    padding: 2px 0;
+}
+
+/* Suggestions */
+.ai-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.sugg-chip {
+    padding: 6px 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    font-size: 0.78rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 150ms;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.sugg-chip:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: var(--brand-light);
+}
+
+/* Input row */
+.ai-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+}
+
+.ai-text-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.ai-text-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.ai-input-row.card {
+    border: 1px solid var(--border-strong);
+}

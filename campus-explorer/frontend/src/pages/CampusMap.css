@@ -1,0 +1,341 @@
+/* Campus Map */
+.map-page {
+    background: var(--bg);
+}
+
+.map-layout {
+    display: flex;
+    height: calc(100vh - 64px);
+}
+
+/* ─── SIDEBAR ────────────────────── */
+.map-sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    background: var(--bg-1);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-sidebar h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0 4px;
+}
+
+.map-view-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px;
+    background: var(--bg-2);
+    padding: 3px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 3px;
+    border-radius: 6px;
+    background: none;
+    border: none;
+    color: var(--text-2);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 150ms;
+    font-family: inherit;
+}
+
+.view-btn.active {
+    background: var(--bg-1);
+    color: var(--brand);
+    box-shadow: var(--shadow);
+}
+
+.map-search-input {
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    padding: 8px 12px;
+    font-size: 0.84rem;
+    color: var(--text);
+    transition: border 150ms;
+    width: 100%;
+}
+
+.map-search-input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.map-sel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sel-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.sel-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+.map-no-sel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 10px;
+}
+
+.fp-sidebar-floors {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fp-sidebar-floor-btn {
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: all 150ms;
+}
+
+.fp-sidebar-floor-btn.active {
+    background: var(--brand-light);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+.loc-list-head {
+    font-size: 0.67rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-3);
+    padding: 2px 4px;
+}
+
+.loc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.loc-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--text-2);
+    transition: all 150ms;
+    border-left: 2px solid transparent;
+}
+
+.loc-list-row:hover {
+    background: var(--bg-2);
+    color: var(--text);
+}
+
+.loc-list-row.active {
+    background: var(--brand-light);
+    color: var(--brand);
+    border-left-color: var(--brand);
+}
+
+/* ─── MAP CANVAS ─────────────────── */
+.map-container {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: var(--bg);
+    position: relative;
+}
+
+.campus-svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ─── FLOOR PLAN (FULL) ──────────── */
+.fp-full-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* No selection splash */
+.fp-no-sel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px;
+    text-align: center;
+    background: var(--bg);
+}
+
+.fp-no-sel h2 {
+    font-size: 1.4rem;
+}
+
+.fp-no-sel p {
+    color: var(--text-2);
+    font-size: 0.9rem;
+}
+
+.fp-building-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+    width: 100%;
+    max-width: 540px;
+}
+
+.fp-building-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 200ms;
+}
+
+.fp-building-tile:hover {
+    border-color: var(--brand);
+    transform: translateY(-2px);
+}
+
+/* Viewer */
+.fp-viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.fp-viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-1);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.fp-legend-items {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.fp-legend-item2 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: var(--text-2);
+}
+
+.fp-swatch {
+    width: 16px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.fp-scroll-wrap {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    background: var(--bg);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* ─── ARCHITECTURAL SVG VARS ─────── */
+:root {
+    --fp-bg: #FAFAFA;
+    --fp-grid: rgba(0, 0, 0, 0.08);
+    --fp-wall: #1a1a2e;
+    --fp-win: #0EA5E9;
+    --fp-door: #374151;
+    --fp-text: #111;
+    --fp-subtext: #555;
+    --fp-corr: rgba(241, 241, 247, 0.9);
+    --fp-hatch: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] {
+    --fp-bg: #0e0e18;
+    --fp-grid: rgba(255, 255, 255, 0.05);
+    --fp-wall: #e2e8f0;
+    --fp-win: #38bdf8;
+    --fp-door: #94a3b8;
+    --fp-text: #f1f5f9;
+    --fp-subtext: #94a3b8;
+    --fp-corr: rgba(30, 30, 40, 0.95);
+    --fp-hatch: rgba(255, 255, 255, 0.12);
+}
+
+/* Architectural SVG */
+.arch-fp {
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border);
+    max-width: 100%;
+    min-height: 400px;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ─── RESPONSIVE ─────────────────── */
+@media (max-width: 768px) {
+    .map-layout {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .map-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        max-height: 320px;
+    }
+
+    .map-container {
+        min-height: 400px;
+    }
+
+    .fp-building-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

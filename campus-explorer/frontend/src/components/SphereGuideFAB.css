@@ -1,0 +1,125 @@
+.sphere-guide-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    height: 56px;
+    padding: 0 24px;
+    background: rgba(13, 13, 20, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    animation: fabEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="light"] .sphere-guide-fab {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--brand);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fabEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.sphere-guide-fab:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+    box-shadow: 0 20px 40px rgba(91, 79, 233, 0.3);
+}
+
+.fab-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.fab-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+.fab-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.fab-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, var(--brand) 0%, transparent 70%);
+    opacity: 0.2;
+    transition: opacity 0.3s;
+}
+
+.sphere-guide-fab:hover .fab-glow {
+    opacity: 0.4;
+}
+
+.fab-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    border: 2px solid var(--brand);
+    opacity: 0;
+    animation: fabPulse 3s infinite;
+}
+
+@keyframes fabPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+    .sphere-guide-fab {
+        bottom: 20px;
+        right: 20px;
+        height: 52px;
+        padding: 0 20px;
+    }
+
+    .fab-text {
+        display: none;
+        /* Icon only on small mobile */
+    }
+
+    .sphere-guide-fab {
+        padding: 0;
+        width: 52px;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,106 @@
+.nav-panel {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--brand);
+    margin: 12px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.nav-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.nav-panel-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+}
+
+.nav-field {
+    margin-bottom: 10px;
+}
+
+.nav-field label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.nav-field select {
+    width: 100%;
+    background: rgba(30, 41, 59, 0.9);
+    /* Darker, more solid background */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    /* Force white text */
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    /* Reset native appearance for better styling */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+}
+
+.nav-field select option {
+    background: #1e293b;
+    /* Dark slate background for options */
+    color: white;
+    padding: 10px;
+}
+
+.nav-field select:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 2px rgba(91, 79, 233, 0.3);
+}
+
+.floor-pills {
+    display: flex;
+    gap: 6px;
+}
+
+.floor-pill {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-3);
+    padding: 4px 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.floor-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.floor-pill.active {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.nav-actions {
+    margin-top: 14px;
+}
+
+.nav-go-btn {
+    width: 100%;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}

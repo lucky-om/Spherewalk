@@ -1,0 +1,263 @@
+/* Admin Dashboard */
+.admin-page {
+    background: var(--bg);
+}
+
+/* Login */
+.admin-login {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    text-align: center;
+}
+
+.login-icon {
+    font-size: 2.8rem;
+}
+
+.login-card h1 {
+    font-size: 1.6rem;
+}
+
+.login-card>p {
+    color: var(--text-2);
+    font-size: 0.88rem;
+}
+
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.login-hint {
+    font-size: 0.75rem;
+    color: var(--text-3);
+}
+
+/* Dashboard layout */
+.admin-wrap {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.admin-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+}
+
+.admin-top-bar h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.admin-top-bar p {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    margin-top: 1px;
+}
+
+/* Tabs */
+.admin-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-2);
+    padding: 4px;
+    border-radius: var(--r-sm);
+    width: fit-content;
+    border: 1px solid var(--border);
+}
+
+.tab-btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    background: none;
+    border: none;
+    color: var(--text-2);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 150ms;
+}
+
+.tab-btn.active {
+    background: var(--bg-1);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+/* Section */
+.admin-section {}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 18px;
+}
+
+.form-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* List */
+.admin-list-head {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.admin-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-list-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.list-item-name {
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.list-item-meta {
+    font-size: 0.75rem;
+    color: var(--text-3);
+    margin-top: 2px;
+}
+
+.list-item-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    cursor: pointer;
+}
+
+.checkbox-row input {
+    width: auto;
+    cursor: pointer;
+}
+
+/* Analytics */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.analytics-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.analytics-card h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.analytics-total {
+    font-size: 0.8rem;
+    color: var(--text-3);
+}
+
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bar-lbl {
+    font-size: 0.75rem;
+    color: var(--text-2);
+    width: 110px;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--bg-2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.bar-fill-2 {
+    background: linear-gradient(90deg, var(--success), #0EA5E9);
+}
+
+.bar-cnt {
+    font-size: 0.72rem;
+    color: var(--text-3);
+    width: 20px;
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .two-col {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
