@@ -29,18 +29,38 @@ const TIPS = [
 
 export default function Emergency() {
     const [flashOn, setFlashOn] = useState(false);
+    const [track, setTrack] = useState(null);
 
     const call = (num) => { if (num) window.location.href = `tel:${num}`; };
     const toggleFlash = async () => {
-        setFlashOn(f => !f);
-        try {
-            const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-            const t = s.getVideoTracks()[0];
-        } catch (e) {
-            console.error(e);
-            alert('Flashlight not supported on this device');
+    try {
+        if (!track) {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: "environment" } }
+            });
+
+            const videoTrack = stream.getVideoTracks()[0];
+            setTrack(videoTrack);
+
+            await videoTrack.applyConstraints({
+                advanced: [{ torch: true }]
+            });
+
+            setFlashOn(true);
+        } else {
+            await track.applyConstraints({
+                advanced: [{ torch: false }]
+            });
+
+            track.stop();
+            setTrack(null);
+            setFlashOn(false);
         }
-    };
+    } catch (err) {
+        console.error(err);
+        alert("Flashlight is not supported on this device or browser.");
+    }
+};
 
     return (
         <div className="emergency-page page">
