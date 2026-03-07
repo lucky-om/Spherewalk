@@ -4,7 +4,7 @@ const { GoogleGenAI } = require('@google/genai');
 const db = require('../data/db');
 const { MAP_BUILDINGS } = require('../data/mapBuildings');
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: 'AIzaSyBmtqfz-dCIHUgZ4oRq7Z5_yU_6UlNtOU4' });
 
 const SYSTEM_INSTRUCTION = `You are SphereWalk AI Assistant for SphereWalk Virtual Campus Explorer.
 

@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
             'INSERT INTO locations (name, type, floor, building, description, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?)'
         ).run(name, type, Number(floor) || 0, building, description || '', Number(lat) || 0, Number(lng) || 0);
         const id = result.lastInsertRowid;
-        const qrData = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/ar-navigation?dest=${id}`;
+        const qrData = `http://localhost:5173/ar-navigation?dest=${id}`;
         const qrCode = await QRCode.toDataURL(qrData);
         db.prepare('UPDATE locations SET qrCode = ? WHERE id = ?').run(qrCode, id);
         const location = db.prepare('SELECT * FROM locations WHERE id = ?').get(id);

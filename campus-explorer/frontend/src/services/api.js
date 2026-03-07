@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000' });
+const API = axios.create({ baseURL: 'http://localhost:5000' });
 
 // Attach JWT token if present
 API.interceptors.request.use(cfg => {
@@ -25,7 +25,7 @@ export const addTour = (data) => API.post('/api/tours', data);
 export const updateTour = (id, data) => API.put(`/api/tours/${id}`, data);
 export const deleteTour = (id) => API.delete(`/api/tours/${id}`);
 
-export const getQR = (id) => `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/qr/${id}`;
+export const getQR = (id) => `http://localhost:5000/api/qr/${id}`;
 export const logSearch = (query, locationId) => API.post('/api/analytics/search', { query, locationId });
 export const getAnalytics = () => API.get('/api/analytics');
 

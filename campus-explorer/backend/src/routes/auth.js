@@ -12,7 +12,7 @@ router.post('/login', (req, res) => {
         if (!admin) return res.status(401).json({ error: 'Invalid credentials' });
         const valid = bcrypt.compareSync(password, admin.password);
         if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-        const token = jwt.sign({ id: admin.id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ id: admin.id, username: admin.username }, 'campus-explorer-secret-key', { expiresIn: '24h' });
         res.json({ token, username: admin.username });
     } catch (err) {
         res.status(500).json({ error: err.message });
