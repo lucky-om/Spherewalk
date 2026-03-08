@@ -39,8 +39,8 @@ spherewalk/
 │   │   ├── pages/          # Campus.jsx, Dept.jsx, Room.jsx, Admin.jsx
 │   │   └── styles/         # Neon-Dark Global CSS
 └── README.md
-
-🏆 Hackathon Credits :
+```
+## 🏆 Hackathon Credits :
 Event: SCETATHON 2026
 
 Team ID: SCET2026-058
@@ -54,4 +54,4 @@ Team Members :
 4. Patel Om
 5. Jariwala Devansh
 
-Live Website : spherewalk.greennode.in
+Live Website : https://spherewalk.greennode.in
