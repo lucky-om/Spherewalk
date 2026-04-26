@@ -1,0 +1,446 @@
+/* SphereWalk Campus Explorer | v2.0 | Green Node Team */
+/* AI Assistant */
+.ai-page {
+    background: var(--bg);
+}
+
+.ai-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+}
+
+.bot-message-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 72%;
+    min-width: 0;
+}
+
+.nav-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.nav-btn {
+    padding: 6px 14px;
+    background: var(--brand-light, rgba(99, 102, 241,0.1));
+    border: 1px solid var(--brand-border, rgba(99, 102, 241,0.3));
+    border-radius: var(--r-full, 99px);
+    color: var(--brand);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 150ms ease;
+}
+
+.nav-btn:hover {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+    transform: translateY(-1px);
+}
+
+.ai-header-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+}
+
+.ai-avatar-box {
+    font-size: 2rem;
+}
+
+.ai-header-text h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.ai-header-text p {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    margin-top: 2px;
+}
+
+/* Chat */
+.ai-chat {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 2px;
+    min-height: 300px;
+    max-height: 440px;
+}
+
+.chat-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    animation: messagePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+@keyframes messagePop {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.chat-row.user {
+    flex-direction: row-reverse;
+}
+
+.chat-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.bubble.bot {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.bubble.user {
+    background: linear-gradient(135deg, var(--brand), #818cf8);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    max-width: 72%;
+    align-self: flex-end;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+}
+
+/* Chat Markdown Styles */
+.chat-markdown h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 12px 0 8px;
+    color: var(--brand);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+}
+
+.chat-markdown p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.chat-markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.82rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.chat-markdown th {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--brand);
+    text-align: left;
+    padding: 8px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+}
+
+.chat-markdown td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-markdown tr:last-child td {
+    border-bottom: none;
+}
+
+.chat-markdown ul, .chat-markdown ol {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.chat-markdown li {
+    margin: 4px 0;
+}
+
+.chat-markdown strong {
+    color: var(--brand);
+    font-weight: 700;
+}
+
+.bubble.user .chat-markdown strong {
+    color: #fff;
+}
+
+/* Typing indicator */
+.typing-dots {
+    display: flex;
+    gap: 5px;
+    padding: 10px 16px;
+    background: var(--bg-2);
+    border-radius: 14px;
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--border);
+    width: fit-content;
+    margin-left: 40px;
+    animation: messagePop 0.3s ease-out;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    background: var(--brand);
+    border-radius: 50%;
+    animation: chatTyping 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes chatTyping {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+.bubble.bot.thinking {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    background: rgba(99, 102, 241, 0.05);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.scanning-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--brand);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Response cards inside bubbles */
+.resp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+}
+
+.resp-card-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.resp-profile {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.resp-profile-icon {
+    font-size: 1.6rem;
+}
+
+.resp-profile-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.resp-profile-role {
+    font-size: 0.78rem;
+    color: var(--brand);
+}
+
+.resp-profile-detail {
+    font-size: 0.78rem;
+    color: var(--text-2);
+    margin-top: 2px;
+}
+
+.resp-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.resp-stat-val {
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.resp-stat-lbl {
+    font-size: 0.68rem;
+    color: var(--text-2);
+}
+
+.resp-companies {
+    font-size: 0.75rem;
+    color: var(--text-2);
+}
+
+.resp-event+.resp-event {
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+    padding-top: 6px;
+}
+
+.resp-event-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.resp-event-meta {
+    font-size: 0.75rem;
+    color: var(--brand);
+}
+
+.resp-event-desc {
+    font-size: 0.75rem;
+    color: var(--text-2);
+}
+
+.resp-loc-tag {
+    font-size: 0.78rem;
+    color: var(--text-2);
+}
+
+.resp-emrg-row {
+    font-size: 0.82rem;
+    padding: 3px 0;
+}
+
+.resp-emrg-row a {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.resp-adm-row {
+    font-size: 0.82rem;
+    color: var(--text-2);
+    padding: 2px 0;
+}
+
+/* Suggestions */
+.ai-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 2px 0;
+}
+
+.sugg-chip {
+    padding: 6px 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    font-size: 0.78rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 150ms;
+    font-family: inherit;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sugg-chip:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: var(--brand-light);
+}
+
+/* Input row */
+.ai-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-1);
+    z-index: 10;
+}
+
+.ai-text-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    min-width: 0;
+}
+
+.ai-text-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.ai-input-row.card {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+}
+
+/* Responsive AI */
+@media (max-width: 640px) {
+    .ai-wrap {
+        padding: 12px;
+    }
+    .ai-chat {
+        max-height: 55vh;
+    }
+    .bubble.user {
+        max-width: 85%;
+    }
+    .bot-message-group {
+        max-width: 88%;
+    }
+    .sugg-chip {
+        font-size: 0.72rem;
+        padding: 5px 10px;
+    }
+}

@@ -1,0 +1,250 @@
+/* SphereWalk Campus Explorer | Navbar — Meridian Theme */
+
+/* ===== FIXED GLASS NAVBAR ===== */
+.navbar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(9, 8, 6, 0.72);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+    box-shadow: 0 1px 0 rgba(99, 102, 241, 0.05), 0 4px 24px rgba(0, 0, 0, 0.5);
+    transition: background 0.3s ease;
+}
+
+[data-theme="light"] .navbar-wrapper {
+    background: rgba(244, 238, 216, 0.82);
+    border-bottom: 1px solid rgba(100, 80, 30, 0.12);
+    box-shadow: 0 1px 0 rgba(100, 80, 30, 0.08), 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 64px;
+    padding: 0 20px;
+    background: transparent;
+}
+
+/* ===== BRAND ===== */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+    margin-right: auto;
+    transition: opacity 0.2s;
+}
+
+.navbar-brand:hover { opacity: 0.8; }
+
+.navbar-logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+[data-theme="light"] .navbar-logo-img {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.brand-name {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+.brand-sphere { color: var(--text); }
+
+.brand-walk {
+    background: linear-gradient(120deg, var(--brand), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== DESKTOP LINKS ===== */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-right: 16px;
+}
+
+.nav-link {
+    padding: 7px 14px;
+    border-radius: var(--r-sm);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    color: var(--text);
+    background: rgba(99, 102, 241, 0.06);
+}
+
+.nav-link.active {
+    color: var(--brand);
+    background: var(--brand-light);
+    border: 1px solid var(--brand-border);
+}
+
+[data-theme="light"] .nav-link { color: var(--text-3); }
+[data-theme="light"] .nav-link:hover { color: var(--text); background: rgba(100, 80, 30, 0.06); }
+
+/* ===== ACTIONS ===== */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Theme toggle */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: var(--r-sm);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-2);
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.theme-toggle:hover {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand);
+}
+
+.nav-btn {
+    border-radius: var(--r-sm) !important;
+    padding: 7px 16px !important;
+    font-size: 0.68rem !important;
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 34px;
+    height: 34px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.hamburger:hover {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.hamburger span {
+    display: block;
+    width: 14px;
+    height: 1.5px;
+    background: var(--text-2);
+    border-radius: 1px;
+    transition: transform 0.25s ease, opacity 0.2s;
+}
+
+.hamburger.open { background: var(--brand-light); border-color: var(--brand-border); }
+.hamburger.open span { background: var(--brand); }
+.hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: auto;
+    z-index: 999;
+}
+
+.mobile-menu {
+    position: absolute;
+    top: 74px;
+    left: 12px;
+    right: 12px;
+    background: var(--bg-2);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-lg), 0 0 60px rgba(99, 102, 241, 0.05);
+    animation: menuDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: auto;
+    /* Top accent */
+    border-top: 2px solid var(--brand);
+}
+
+@keyframes menuDown {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.mobile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+.mobile-link:hover {
+    background: var(--bg-3);
+    color: var(--text);
+    transform: translateX(4px);
+}
+
+.mobile-link.active {
+    background: var(--brand-light);
+    color: var(--brand);
+    border: 1px solid var(--brand-border);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 860px) {
+    .navbar-links { display: none; }
+    .hamburger    { display: flex; }
+    .navbar-inner { padding: 0 16px; }
+}

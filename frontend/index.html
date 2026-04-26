@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8" />
+     <link rel="icon" type="image/png" href="/logo.png" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+     <!-- Stop IE/Edge from MIME-sniffing responses -->
+     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+     <!-- Referrer policy: only send origin on same-origin requests -->
+     <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+     <!-- Permissions Policy: disable powerful APIs not used by this app -->
+     <meta http-equiv="Permissions-Policy"
+          content="geolocation=(self), camera=(self), microphone=(), payment=(), usb=(), midi=(), magnetometer=(), gyroscope=(self), accelerometer=(self)" />
+
+     <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net;
+      style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net;
+      font-src 'self' fonts.gstatic.com data:;
+      img-src 'self' data: blob: *.pannellum.org cdn.jsdelivr.net;
+      connect-src 'self' http://localhost:5000 https://localhost:5000 ws://localhost:* wss://localhost:* https://api.x.ai https://raw.githack.com https://*.githack.com;
+      media-src 'self' blob:;
+      frame-src 'none';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+    " />
+
+     <!-- ═══════════════════════════════════════════════════════════════════
+       SEO & Meta Tags
+  ═══════════════════════════════════════════════════════════════════ -->
+     <title>SphereWalk | Smart Campus Navigation</title>
+     <meta name="description"
+          content="The ultimate intelligent campus experience. Follow live AR arrows, explore 360° virtual spaces, and get instant answers from our AI Sphere Guide." />
+     <meta name="keywords"
+          content="Campus Navigation, AR Pathfinding, Virtual Tour, SphereWalk, Chatbot, Smart Campus, Student Guide, SCET" />
+     <meta name="author" content="Green Node Team" />
+     <meta name="robots" content="index, follow" />
+     <meta name="theme-color" content="#0d0d14" />
+
+     <!-- ═══════════════════════════════════════════════════════════════════
+       Open Graph / Social Link Previews
+  ═══════════════════════════════════════════════════════════════════ -->
+     <meta property="og:type" content="website" />
+     <meta property="og:url" content="https://spherewalk.campus.io/" />
+     <meta property="og:title" content="SphereWalk | Smart Campus Navigation" />
+     <meta property="og:description"
+          content="Navigate the campus smartly with interactive maps, 360° virtual tours, and AI guidance." />
+     <meta property="og:image" content="/logo.png" />
+     <meta property="og:site_name" content="SphereWalk" />
+     <meta property="og:locale" content="en_IN" />
+
+     <!-- ═══════════════════════════════════════════════════════════════════
+       Twitter / X Cards
+  ═══════════════════════════════════════════════════════════════════ -->
+     <meta name="twitter:card" content="summary_large_image" />
+     <meta name="twitter:url" content="https://spherewalk.campus.io/" />
+     <meta name="twitter:title" content="SphereWalk | Smart Campus Navigation" />
+     <meta name="twitter:description"
+          content="Navigate the campus smartly with interactive maps, 360° virtual tours, and AI guidance." />
+     <meta name="twitter:image" content="/logo.png" />
+
+     <!-- ═══════════════════════════════════════════════════════════════════
+       Fonts (preconnect for performance)
+  ═══════════════════════════════════════════════════════════════════ -->
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+
+<body>
+     <div id="root"></div>
+     <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

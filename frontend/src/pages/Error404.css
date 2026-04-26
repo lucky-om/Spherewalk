@@ -1,0 +1,91 @@
+/* SphereWalk Campus Explorer | v1.0 | Green Node Team */
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 120px 20px 60px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.error-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.error-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.15;
+    animation: orbPulse 8s ease-in-out infinite alternate;
+}
+
+.error-orb-1 {
+    width: 500px;
+    height: 500px;
+    background: var(--danger);
+    top: -10%;
+    left: -10%;
+}
+
+.error-orb-2 {
+    width: 600px;
+    height: 600px;
+    background: var(--brand);
+    bottom: -20%;
+    right: -10%;
+    animation-delay: -3s;
+}
+
+@keyframes orbPulse {
+    0% { transform: scale(1); opacity: 0.1; }
+    100% { transform: scale(1.2); opacity: 0.2; }
+}
+
+.error-content {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeUp 0.6s ease-out forwards;
+}
+
+.error-code {
+    font-size: clamp(6rem, 15vw, 10rem);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--danger), #ff8a8a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 10px 20px rgba(239, 68, 68, 0.3));
+}
+
+.error-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.error-desc {
+    font-size: 1.1rem;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+

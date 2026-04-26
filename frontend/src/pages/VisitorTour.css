@@ -1,0 +1,145 @@
+/* SphereWalk Campus Explorer | v1.0 | Green Node Team */
+/* Visitor Tour */
+.visitor-page {
+    background: var(--bg);
+}
+
+.visitor-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+/* Progress */
+.tour-progress-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+}
+
+.progress-label {
+    font-size: 0.75rem;
+    color: var(--text-3);
+    white-space: nowrap;
+}
+
+/* Stop card */
+.visitor-stop {
+    width: 100%;
+    padding: 44px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+    animation: fadeUp 0.4s ease;
+}
+
+.stop-icon {
+    font-size: 4.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.stop-title {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+}
+
+.stop-desc {
+    color: var(--text-2);
+    font-size: 0.93rem;
+    line-height: 1.7;
+    max-width: 520px;
+}
+
+.stop-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 380px;
+}
+
+.stop-fact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 0.83rem;
+    color: var(--text);
+    text-align: left;
+}
+
+.fact-check {
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Stop navigator */
+.stop-nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stop-dot-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-2);
+    border: 1.5px solid var(--border-strong);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 200ms;
+    font-family: inherit;
+}
+
+.stop-dot-btn.active {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    box-shadow: 0 0 0 3px var(--brand-border);
+}
+
+.stop-dot-btn.done {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.08);
+    color: var(--success);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* Controls */
+.visitor-controls {
+    display: flex;
+    gap: 12px;
+}

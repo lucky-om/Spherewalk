@@ -1,0 +1,228 @@
+/* SphereWalk Campus Explorer | v1.0 | Green Node Team */
+/* Emergency */
+.emergency-page {
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+.emergency-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.emrg-header {
+    text-align: center;
+    padding: 20px 0 4px;
+}
+
+.emrg-icon {
+    font-size: 3.5rem;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.emrg-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--danger);
+    margin: 10px 0 6px;
+}
+
+.emrg-header p {
+    font-size: 0.9rem;
+    color: var(--text-2);
+}
+
+/* Quick call buttons */
+.quick-calls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.q-call-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 16px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    cursor: pointer;
+    transition: all 150ms;
+    font-family: inherit;
+    text-align: left;
+}
+
+.q-call-btn:hover {
+    border-color: var(--btn-c, var(--brand));
+    background: color-mix(in srgb, var(--btn-c, var(--brand)) 8%, var(--bg-1));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-lg);
+}
+
+.q-call-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.q-call-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--text);
+}
+
+.q-call-num {
+    font-size: 0.78rem;
+    color: var(--text-3);
+    margin-top: 1px;
+    font-family: monospace;
+}
+
+/* Grid */
+.emrg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.emrg-card {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.emrg-card h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.mini-map-svg {
+    width: 100%;
+    height: 150px;
+    border-radius: var(--r-md);
+}
+
+.exits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.exit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    background: var(--bg-2);
+    border-radius: var(--r-sm);
+}
+
+.exit-dir {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--success);
+    width: 24px;
+    text-align: center;
+}
+
+.exit-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.exit-dist {
+    font-size: 0.75rem;
+    color: var(--text-3);
+}
+
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.contact-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 6px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: all 150ms;
+    font-family: inherit;
+}
+
+.contact-tile:hover {
+    border-color: var(--tile-c, var(--brand));
+    transform: translateY(-1px);
+}
+
+.contact-tile-icon {
+    font-size: 1.5rem;
+}
+
+.contact-tile-role {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-2);
+    text-align: center;
+}
+
+.contact-tile-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--tile-c, var(--brand));
+    font-family: monospace;
+}
+
+/* Safety tips */
+.safety-card {
+    padding: 18px 22px;
+}
+
+.safety-card h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.safety-tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.safety-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.83rem;
+    color: var(--text-2);
+}
+
+.safety-check {
+    color: var(--warning);
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .quick-calls {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .emrg-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contacts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

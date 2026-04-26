@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0"
+  },
+  "name": "campus-explorer",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000S\u0000p\u0000h\u0000e\u0000r\u0000e\u0000W\u0000a\u0000l\u0000k\u0000_\u0000T\u0000e\u0000s\u0000t\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
