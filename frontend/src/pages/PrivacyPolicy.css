@@ -1,68 +1,196 @@
-/* SphereWalk Campus Explorer | v2.0 | Green Node Team */
+/* SphereWalk Legal Pages — Privacy Policy & Terms of Use */
+/* Copyright © 2026 Lucky. All Rights Reserved. */
+
+/* ─── Page Shell ─────────────────────────────── */
 .legal-page {
-    padding-top: 120px;
-    padding-bottom: 80px;
-    background: var(--bg-0);
+    min-height: 100vh;
+    background: var(--bg, #f8fafc);
 }
 
+/* ─── Hero Banner ─────────────────────────────── */
 .legal-hero {
-    margin-bottom: 64px;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%);
+    padding: 80px 0 60px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.legal-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.legal-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 99px;
+    margin-bottom: 20px;
 }
 
 .legal-hero h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, var(--text), var(--text-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    color: #fff;
+    margin: 0 0 12px;
+    letter-spacing: -0.03em;
+    position: relative;
 }
 
-.legal-hero p {
-    color: var(--text-3);
-    font-weight: 500;
+.legal-meta {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0 0 6px;
+    position: relative;
 }
 
+.legal-owner {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.82rem;
+    margin: 0;
+    position: relative;
+}
+
+/* ─── Content ─────────────────────────────────── */
 .legal-content {
-    max-width: 900px !important;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
 }
 
 .legal-card {
-    padding: 64px !important;
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-    background: rgba(20, 20, 30, 0.45) !important;
-    backdrop-filter: blur(24px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 20px;
+    padding: 48px 52px;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06);
 }
 
+@media (max-width: 640px) {
+    .legal-card {
+        padding: 28px 20px;
+    }
+}
+
+/* ─── Sections ─────────────────────────────────── */
 .legal-card section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.legal-card section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 24px;
 }
 
 .legal-card h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-1, #0f172a);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.02em;
+}
+
+.legal-card h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.legal-card h3 {
+    font-size: 1rem;
     font-weight: 700;
-    color: var(--brand);
-    letter-spacing: -0.01em;
+    color: var(--text-1, #1e293b);
+    margin: 20px 0 8px;
 }
 
 .legal-card p {
-    color: var(--text-2);
+    font-size: 0.95rem;
+    color: var(--text-2, #475569);
+    line-height: 1.75;
+    margin: 0 0 12px;
+}
+
+.legal-card ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.legal-card ul li {
+    font-size: 0.93rem;
+    color: var(--text-2, #475569);
     line-height: 1.7;
-    font-size: 1.05rem;
+    margin-bottom: 6px;
 }
 
-.legal-card strong {
-    color: var(--text);
+.legal-card a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 600;
 }
 
-@media (max-width: 768px) {
-    .legal-card {
-        padding: 32px !important;
-    }
+.legal-card a:hover {
+    text-decoration: underline;
+    color: #4f46e5;
+}
+
+/* ─── Footer Note ─────────────────────────────── */
+.legal-footer-note {
+    text-align: center;
+    padding: 20px 0 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--border, #e2e8f0);
+}
+
+.legal-footer-note p {
+    color: var(--text-3, #94a3b8);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ─── Dark mode ────────────────────────────────── */
+[data-theme="dark"] .legal-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .legal-card h2 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .legal-card h3 {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .legal-card p,
+[data-theme="dark"] .legal-card ul li {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+[data-theme="dark"] .legal-card section {
+    border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .legal-footer-note {
+    border-top-color: rgba(255, 255, 255, 0.07);
 }
