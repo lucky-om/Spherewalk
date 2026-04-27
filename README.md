@@ -139,7 +139,7 @@ See [LICENSE](./LICENSE) for full terms.
 ## 👤 Author
 
 **Lucky**  
-Full-Stack Developer | SCET Surat  
+Full-Stack Developer | Ethical Hacker  
 GitHub: [@lucky-om](https://github.com/lucky-om)
 
 ---
