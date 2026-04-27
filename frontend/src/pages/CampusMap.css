@@ -7,6 +7,7 @@
 .map-layout {
     display: flex;
     height: calc(100vh - 64px);
+    overflow: hidden;
 }
 
 /* ─── SIDEBAR ────────────────────── */
@@ -170,11 +171,12 @@
 /* ─── MAP CANVAS ─────────────────── */
 .map-container {
     flex: 1;
-    display: flex;
     overflow: hidden;
-    background: var(--bg);
+    background: #dbeafe;
     position: relative;
-    min-height: 500px;
+    /* Explicit height so children (Canvas) always get real px */
+    height: calc(100vh - 64px);
+    min-height: 400px;
 }
 
 .campus-svg {

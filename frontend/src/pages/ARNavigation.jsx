@@ -591,6 +591,8 @@ export default function ARNavigation() {
     return (
         <div className="ar-view">
             <style>{`.sphere-guide-fab { display: none !important; }`}</style>
+
+            {/* Camera feed — always visible, remove opacity toggling that caused black screen */}
             <video
                 ref={videoRef}
                 className="ar-video"
@@ -598,169 +600,146 @@ export default function ARNavigation() {
                 playsInline
                 muted
                 onLoadedMetadata={handleVideoMetadata}
-                style={{
-                    transform: isMirrored ? 'scaleX(-1)' : 'none',
-                    opacity: videoReady ? 1 : 0,
-                    transition: 'opacity 0.5s ease'
-                }}
+                style={{ transform: isMirrored ? 'scaleX(-1)' : 'none' }}
             />
-            <canvas ref={canvasRef} className="ar-canvas" style={{ opacity: videoReady ? 1 : 0 }} />
+            <canvas ref={canvasRef} className="ar-canvas" />
 
+            {/* Loading overlay */}
             {!videoReady && !virtualCamera && (
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff', zIndex: 200 }}>
-                    <div style={{ fontWeight: '600', fontSize: '1.2rem' }}>Initializing Hardware...</div>
-                    <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)', marginTop: '8px' }}>Checking video feed...</div>
-                    <button className="ar-ctrl" style={{ marginTop: '24px', background: 'rgba(139, 92, 246, 0.4)', borderColor: '#8b5cf6', padding: '10px 20px' }} onClick={() => { setVirtualCamera(true); setVideoReady(true); }}>
-                        Force Virtual Mode
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.85)', color: '#fff', zIndex: 200 }}>
+                    <div style={{ fontSize: '2rem', marginBottom: '12px' }}>📷</div>
+                    <div style={{ fontWeight: '700', fontSize: '1.1rem' }}>Starting Camera...</div>
+                    <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginTop: '8px' }}>Allow camera permission when prompted</div>
+                    <button className="ar-ctrl" style={{ marginTop: '28px', background: 'rgba(139,92,246,0.4)', borderColor: '#8b5cf6', padding: '10px 24px' }}
+                        onClick={() => { setVirtualCamera(true); setVideoReady(true); }}>
+                        Use Virtual Mode Instead
                     </button>
                 </div>
             )}
 
             {virtualCamera && (
-                <div style={{ position: 'absolute', inset: 0, background: '#0a0a14', zIndex: -1 }}>
-                    <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '14px' }}>
-                        [ VIRTUAL AR MODE ]<br/>CAMERA OFFLINE
-                    </div>
+                <div style={{ position: 'absolute', inset: 0, background: '#0a0a14', zIndex: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px', textAlign: 'center' }}>[ VIRTUAL AR MODE ]<br />CAMERA OFFLINE</div>
                 </div>
             )}
 
-            {/* ── Top HUD Overlay ─ no overlapping on mobile ── */}
+            {/* ══ TOP HUD — single flex-column, no positional conflicts ══ */}
             <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0,
-                zIndex: 100, pointerEvents: 'none',
-                display: 'flex', flexDirection: 'column', gap: '6px',
-                padding: '80px 12px 8px'
+                position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100,
+                paddingTop: '56px', padding: '56px 12px 0',
+                display: 'flex', flexDirection: 'column', gap: '8px',
+                pointerEvents: 'none'
             }}>
-                {/* Row 1: AI badge + camera controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', border: '1px solid rgba(16,185,129,0.5)', color: '#10B981', padding: '6px 12px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold', pointerEvents: 'none' }}>
-                        <span style={{ width: '7px', height: '7px', background: '#10B981', borderRadius: '50%', boxShadow: '0 0 10px #10B981', flexShrink: 0 }} />
+                {/* Row 1: AI badge + action buttons */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(10px)', border: '1px solid rgba(16,185,129,0.55)', color: '#10B981', padding: '5px 11px', borderRadius: '8px', fontSize: '11px', fontWeight: '700' }}>
+                        <span style={{ width: '6px', height: '6px', background: '#10B981', borderRadius: '50%', flexShrink: 0 }} />
                         VISION AI
                     </div>
-                    <div style={{ display: 'flex', gap: '6px', pointerEvents: 'all' }}>
+                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'nowrap', pointerEvents: 'all' }}>
                         {devices.length > 1 && (
-                            <button className="ar-ctrl" onClick={() => switchCamera()} style={{ background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', padding: '6px 12px', fontSize: '11px' }}>
-                                🔄 Cam
-                            </button>
+                            <button className="ar-ctrl" onClick={() => switchCamera()} style={{ padding: '5px 10px', fontSize: '11px', background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(10px)' }}>🔄</button>
                         )}
-                        <button className="ar-ctrl" onClick={() => setIsMirrored(!isMirrored)} style={{ background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', padding: '6px 12px', fontSize: '11px' }}>
-                            {isMirrored ? '🔃 Normal' : '🔄 Mirror'}
+                        <button className="ar-ctrl" onClick={() => setIsMirrored(!isMirrored)} style={{ padding: '5px 10px', fontSize: '11px', background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(10px)' }}>
+                            {isMirrored ? '↔N' : '↔M'}
                         </button>
+                        <button className="ar-ctrl" onClick={() => setCameraActive(false)} style={{ padding: '5px 10px', fontSize: '11px', background: 'rgba(220,38,38,0.7)', borderColor: '#ef4444', backdropFilter: 'blur(10px)' }}>✕</button>
                     </div>
                 </div>
 
-                {/* Row 2: GPS + Heading sensor badges */}
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', pointerEvents: 'none' }}>
-                    <div style={{ background: userPos ? 'rgba(16,185,129,0.85)' : 'rgba(239,68,68,0.85)', backdropFilter: 'blur(10px)', color: '#fff', padding: '3px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
-                        {userPos ? '📍 GPS ✔' : '📍 GPS...'}
-                    </div>
-                    <div style={{ background: headingRef.current !== null ? 'rgba(99,102,241,0.85)' : 'rgba(100,100,100,0.85)', backdropFilter: 'blur(10px)', color: '#fff', padding: '3px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
-                        {headingRef.current !== null ? `🧭 ${Math.round(headingRef.current)}°` : '🧭 No Compass'}
-                    </div>
+                {/* Row 2: Sensor pills */}
+                <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                    <span style={{ background: userPos ? 'rgba(16,185,129,0.85)' : 'rgba(220,38,38,0.85)', color: '#fff', padding: '2px 9px', borderRadius: '5px', fontSize: '10px', fontWeight: '700' }}>
+                        {userPos ? '📍 GPS ✔' : '📍 No GPS'}
+                    </span>
+                    <span style={{ background: heading !== 0 ? 'rgba(99,102,241,0.85)' : 'rgba(80,80,80,0.85)', color: '#fff', padding: '2px 9px', borderRadius: '5px', fontSize: '10px', fontWeight: '700' }}>
+                        🧭 {Math.round(heading)}°
+                    </span>
                     {userPos && (
-                        <div style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', color: 'rgba(255,255,255,0.7)', padding: '3px 10px', borderRadius: '6px', fontSize: '10px' }}>
-                            {userPos.lat.toFixed(5)}, {userPos.lng.toFixed(5)}
-                        </div>
+                        <span style={{ background: 'rgba(0,0,0,0.65)', color: 'rgba(255,255,255,0.55)', padding: '2px 8px', borderRadius: '5px', fontSize: '9px' }}>
+                            {userPos.lat.toFixed(4)}, {userPos.lng.toFixed(4)}
+                        </span>
                     )}
                 </div>
             </div>
 
+            {/* ══ BOTTOM HUD ══ */}
             <div className="ar-hud">
                 <div className="ar-hud-info">
                     {selected && (
                         <div className="ar-info-card">
                             <div className="ar-scan-bar"></div>
-                            <div className="ar-dest-name">Tracking: {selected.label}</div>
+                            <div className="ar-dest-name">📍 {selected.label}</div>
                             <div className="ar-dest-km">
-                                {typeof distance === 'string' ? distance : (distance === null || isNaN(distance)) ? '-- m' : distance >= 1000 ? `${(distance / 1000).toFixed(2)} km` : `${distance} m`}
+                                {typeof distance === 'string'
+                                    ? distance
+                                    : (distance === null || isNaN(distance))
+                                        ? '-- m'
+                                        : distance >= 1000
+                                            ? `${(distance / 1000).toFixed(2)} km`
+                                            : `${distance} m`}
                             </div>
-
                             <div className="ar-dist-bar">
                                 <div className="ar-dist-progress" style={{ width: `${isNaN(distance) ? 0 : Math.max(10, 100 - (distance / 200) * 100)}%` }} />
                             </div>
-
-                            {/* Destination Intel Section */}
                             {dbLocations.find(l => l.id === selected.id)?.description && (
-                                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', marginTop: '-12px', marginBottom: '16px', fontStyle: 'italic', lineHeight: '1.4' }}>
+                                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', marginBottom: '12px', fontStyle: 'italic', lineHeight: '1.4' }}>
                                     {dbLocations.find(l => l.id === selected.id).description}
                                 </div>
                             )}
-
-                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                                <button className="ar-ctrl" style={{ fontSize: '10px', padding: '6px 14px', background: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6' }} onClick={() => setShowMenu(!showMenu)}>
+                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <button className="ar-ctrl" style={{ fontSize: '10px', padding: '6px 14px', background: 'rgba(59,130,246,0.25)', borderColor: '#3b82f6' }} onClick={() => setShowMenu(!showMenu)}>
                                     Change Target
                                 </button>
                                 {!virtualCamera && (
-                                    <button className="ar-ctrl" style={{ fontSize: '10px', padding: '6px 14px', background: 'rgba(139, 92, 246, 0.2)', borderColor: '#8b5cf6' }} onClick={() => setVirtualCamera(true)}>
-                                        Force Virtual AR
+                                    <button className="ar-ctrl" style={{ fontSize: '10px', padding: '6px 14px', background: 'rgba(139,92,246,0.25)', borderColor: '#8b5cf6' }} onClick={() => setVirtualCamera(true)}>
+                                        Virtual Mode
                                     </button>
                                 )}
-                                <button className="ar-ctrl" style={{ fontSize: '10px', padding: '6px 14px', background: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }} onClick={() => setCameraActive(false)}>
-                                    Exit
-                                </button>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Compact Menu (Collapsible) */}
+                {/* Collapsible destination picker */}
                 <div className="ar-controls-wrap" style={{
                     display: showMenu ? 'flex' : 'none',
-                    maxHeight: '40vh',
-                    overflowY: 'auto',
-                    padding: '16px',
-                    borderRadius: '28px 28px 0 0',
-                    background: 'rgba(10, 15, 25, 0.95)',
-                    backdropFilter: 'blur(32px)',
+                    maxHeight: '40vh', overflowY: 'auto', padding: '16px',
+                    borderRadius: '24px 24px 0 0',
+                    background: 'rgba(10,15,25,0.96)', backdropFilter: 'blur(32px)',
                     borderTop: '1px solid rgba(255,255,255,0.1)',
-                    pointerEvents: 'all',
-                    flexDirection: 'column'
+                    pointerEvents: 'all', flexDirection: 'column', gap: '6px'
                 }}>
-                    <div style={{ width: '100%', marginBottom: '12px', fontWeight: 'bold', fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'center' }}>
+                    <div style={{ fontWeight: '700', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'center', marginBottom: '8px' }}>
                         Select Destination
                     </div>
                     {dbLocations
-                        .filter((loc, index, self) =>
-                            index === self.findIndex((t) => (
-                                t.name.toLowerCase().trim() === loc.name.toLowerCase().trim()
-                            ))
-                        )
+                        .filter((loc, idx, self) => idx === self.findIndex(t => t.name.toLowerCase().trim() === loc.name.toLowerCase().trim()))
                         .map(d => (
-                            <button key={d.id} className={`ar-ctrl ${selected?.id === d.id ? 'active' : ''}`}
-                                style={{ borderColor: 'rgba(91, 79, 233, 0.3)', width: '100%', marginBottom: '6px', justifyContent: 'center' }}
+                            <button key={d.id}
+                                className={`ar-ctrl ${selected?.id === d.id ? 'active' : ''}`}
+                                style={{ borderColor: 'rgba(91,79,233,0.35)', width: '100%', justifyContent: 'center' }}
                                 onClick={() => { pick(d.id, d.name); setShowMenu(false); }}>
                                 {d.name}
                             </button>
-                        ))
-                    }
+                        ))}
                 </div>
             </div>
 
+            {/* Arrival banner */}
             {distance !== null && distance <= 8 && (
                 <div className="ar-arrived">
                     <div className="ar-arrived-inner">
                         <div className="ar-arrival-icon">🏆</div>
-                        <h2>Goal Reached</h2>
-                        <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)' }}>
-                            You have successfully arrived at <strong style={{ color: '#fff' }}>{selected?.label}</strong>
+                        <h2>Goal Reached!</h2>
+                        <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.7)' }}>
+                            You arrived at <strong style={{ color: '#fff' }}>{selected?.label}</strong>
                         </p>
-
                         <div className="ar-arrival-stats">
-                            <div className="ar-stat-box">
-                                <span className="ar-stat-label">Accuracy</span>
-                                <span className="ar-stat-value">High</span>
-                            </div>
-                            <div className="ar-stat-box">
-                                <span className="ar-stat-label">Arrival Time</span>
-                                <span className="ar-stat-value">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                            </div>
+                            <div className="ar-stat-box"><span className="ar-stat-label">Accuracy</span><span className="ar-stat-value">High</span></div>
+                            <div className="ar-stat-box"><span className="ar-stat-label">Time</span><span className="ar-stat-value">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>
                         </div>
-
-                        <button
-                            className="ar-ctrl active"
-                            style={{ marginTop: '12px', padding: '14px 40px', fontSize: '1rem' }}
-                            onClick={() => setCameraActive(false)}
-                        >
+                        <button className="ar-ctrl active" style={{ marginTop: '16px', padding: '12px 36px', fontSize: '1rem' }} onClick={() => setCameraActive(false)}>
                             Complete Journey
                         </button>
                     </div>
@@ -769,3 +748,5 @@ export default function ARNavigation() {
         </div>
     );
 }
+
+
