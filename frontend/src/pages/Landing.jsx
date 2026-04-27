@@ -19,7 +19,7 @@ const TEAM = [
         name: 'Om Patel',
         role: 'Cyber Security Expert',
         emoji: '🪐',
-        color: '#32e922ff',
+        color: '#42f632ff',
         linkedin: 'https://linkedin.com/in/lucky-om',
         github: 'https://github.com/lucky-om',
         instagram: 'https://instagram.com/luckkyy.22',

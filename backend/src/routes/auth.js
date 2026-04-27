@@ -23,7 +23,21 @@ router.post('/login', (req, res) => {
             return res.status(400).json({ error: 'Input too long.' });
         }
 
-        // ── Lookup admin ────────────────────────────────────────────────────
+        const envAdminUser = process.env.ADMIN_USERNAME;
+        const envAdminPass = process.env.ADMIN_PASSWORD;
+
+        // ── 1. Check Environment Variables First ────────────────────────────
+        if (envAdminUser && envAdminPass && username === envAdminUser && password === envAdminPass) {
+            const token = jwt.sign(
+                { id: 'env-admin', username: envAdminUser },
+                JWT_SECRET,
+                { expiresIn: '8h' }
+            );
+            console.info(`[AUTH] SUCCESS login (ENV) — username: "${envAdminUser}" IP: ${req.ip}`);
+            return res.json({ token, username: envAdminUser });
+        }
+
+        // ── 2. Lookup admin in DB ───────────────────────────────────────────
         const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username.trim());
 
         // Always run bcrypt so response time doesn't reveal whether the user exists
@@ -42,7 +56,7 @@ router.post('/login', (req, res) => {
             { expiresIn: '8h' }
         );
 
-        console.info(`[AUTH] SUCCESS login — username: "${admin.username}" IP: ${req.ip}`);
+        console.info(`[AUTH] SUCCESS login (DB) — username: "${admin.username}" IP: ${req.ip}`);
         res.json({ token, username: admin.username });
 
     } catch (err) {
