@@ -11,19 +11,19 @@ if (!process.env.GROK_API_KEY) {
     console.warn('[WARN] GROK_API_KEY is not set — AI chatbot will use local fallback only.');
 }
 
-const express    = require('express');
-const cors       = require('cors');
-const helmet     = require('helmet');
-const rateLimit  = require('express-rate-limit');
-const path       = require('path');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const path = require('path');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ── CORS: strict origin allowlist ─────────────────────────────────────────────
 const ALLOWED_ORIGINS = (() => {
     const prod = process.env.FRONTEND_URL;
-    const customDomains = ['https://spherewalk.luckyverse.tech', 'https://spherewalk.greennode.in'];
+    const customDomains = ['https://spherewalk.luckyverse.tech'];
     return prod ? [prod, ...customDomains] : customDomains;
 })();
 
@@ -90,13 +90,13 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 require('./data/db');
 
 // ── Routes ────────────────────────────────────────────────────────────────────
-app.use('/api/auth',        authLimiter, require('./routes/auth'));
-app.use('/api/locations',   require('./routes/locations'));
-app.use('/api/events',      require('./routes/events'));
-app.use('/api/tours',       require('./routes/tours'));
-app.use('/api/analytics',   require('./routes/analytics'));
-app.use('/api/qr',          require('./routes/qr'));
-app.use('/api/chat',        require('./routes/chat'));
+app.use('/api/auth', authLimiter, require('./routes/auth'));
+app.use('/api/locations', require('./routes/locations'));
+app.use('/api/events', require('./routes/events'));
+app.use('/api/tours', require('./routes/tours'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/qr', require('./routes/qr'));
+app.use('/api/chat', require('./routes/chat'));
 app.use('/api/campus-info', require('./routes/campusInfo')); // ← was missing!
 
 // ── Health check ──────────────────────────────────────────────────────────────
@@ -118,4 +118,20 @@ app.listen(PORT, () => {
     console.log(`🚀 Campus Explorer Backend → http://localhost:${PORT}`);
     console.log(`🔒 Security: helmet + rate-limiting + CORS active`);
     console.log(`🌐 Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
+
+    // ── Render Free Tier Keep-Alive Bot ─────────────────────────────────────────
+    if (process.env.RENDER_EXTERNAL_URL) {
+        const url = `${process.env.RENDER_EXTERNAL_URL}/api/health`;
+        console.log(`🤖 Starting Keep-Alive bot pinging ${url} every 14 minutes...`);
+        setInterval(async () => {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    console.log(`[KEEP-ALIVE] Pinged ${url} successfully.`);
+                }
+            } catch (err) {
+                console.error(`[KEEP-ALIVE] Failed to ping ${url}:`, err.message);
+            }
+        }, 14 * 60 * 1000); // 14 minutes
+    }
 });

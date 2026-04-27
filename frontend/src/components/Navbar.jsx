@@ -33,6 +33,7 @@ export default function Navbar() {
     // Close menu when route changes
     useEffect(() => {
         setMenuOpen(false);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
     }, [location.pathname]);
 
     return (

@@ -116,6 +116,7 @@ export default function ARNavigation() {
             if (geoWatchRef.current) navigator.geolocation.clearWatch(geoWatchRef.current);
             window.removeEventListener('deviceorientation', handleOrientation);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const startGPS = () => {
@@ -267,6 +268,7 @@ export default function ARNavigation() {
                 videoRef.current.srcObject = videoStream;
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cameraActive, videoStream, virtualCamera]);
 
     const handleVideoMetadata = () => {
