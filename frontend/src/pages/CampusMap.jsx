@@ -372,10 +372,14 @@ function Map3D({ buildings, selected, onSelect }) {
                 shadows
                 camera={{ position: [25, 45, 60], fov: 45 }}
                 style={{ width: '100%', height: '100%', display: 'block' }}
-                gl={{ antialias: true, alpha: false }}
-                onCreated={({ gl }) => { gl.setClearColor('#f8fafc'); }}
             >
-                <ambientLight intensity={0.6} />
+                {/* Sky blue background */}
+                <color attach="background" args={['#dbeafe']} />
+                <fog attach="fog" args={['#dbeafe', 60, 150]} />
+
+                {/* Lighting */}
+                <ambientLight intensity={0.5} />
+                <hemisphereLight skyColor="#bfdbfe" groundColor="#86efac" intensity={0.6} />
                 <directionalLight
                     castShadow
                     position={[30, 50, -20]}

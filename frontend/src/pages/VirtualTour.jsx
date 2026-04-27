@@ -355,25 +355,28 @@ export default function VirtualTour() {
                     <div className="panorama-wrapper" style={{ position: 'relative' }}>
                         <div id="panorama-viewer" ref={viewerRef} />
 
-                        {/* Google Maps-style minimal text watermark */}
+                        {/* Google Earth-style centered bottom watermark */}
                         <div style={{
-                            position: 'absolute', bottom: '8px', right: '10px',
+                            position: 'absolute', bottom: 0, left: 0, right: 0,
                             zIndex: 20, pointerEvents: 'none',
-                            display: 'flex', alignItems: 'center', gap: '4px'
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            padding: '6px 0 8px',
+                            background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)'
                         }}>
                             <span style={{
-                                color: 'rgba(255,255,255,0.75)',
-                                fontSize: '11px',
+                                color: 'rgba(255,255,255,0.82)',
+                                fontSize: '12px',
                                 fontWeight: '600',
                                 fontFamily: 'Inter, sans-serif',
-                                textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-                                letterSpacing: '0.01em'
-                            }}>🌐 SphereWalk</span>
-                            <span style={{
-                                color: 'rgba(255,255,255,0.4)',
-                                fontSize: '10px',
-                                textShadow: '0 1px 3px rgba(0,0,0,0.8)'
-                            }}>© {new Date().getFullYear()}</span>
+                                letterSpacing: '0.04em',
+                                textShadow: '0 1px 4px rgba(0,0,0,0.9)',
+                                display: 'flex', alignItems: 'center', gap: '6px'
+                            }}>
+                                🌐 SphereWalk Campus Explorer
+                                <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: '400', fontSize: '11px' }}>
+                                    © {new Date().getFullYear()}
+                                </span>
+                            </span>
                         </div>
 
                         {/* Hotspot cards overlaid on the panorama image */}

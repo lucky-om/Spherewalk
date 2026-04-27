@@ -118,6 +118,24 @@ function seedDatabase() {
     });
     insertMany(kb.locations);
     console.log(`✅ Seeded ${kb.locations.length} locations`);
+  } else {
+    // ── GPS Coordinate Repair (runs every boot) ──────────────────────────────
+    // Fix locations where lat/lng were seeded with old pixel-map x/y values (>90 is invalid GPS lat)
+    const kb = require('./knowledgeBase');
+    const badLocs = db.prepare('SELECT id, name FROM locations WHERE lat > 90 OR lat < -90 OR (lat = 0 AND lng = 0)').all();
+    if (badLocs.length > 0) {
+      const updateCoord = db.prepare('UPDATE locations SET lat = ?, lng = ? WHERE id = ?');
+      const repairAll = db.transaction(() => {
+        for (const row of badLocs) {
+          const match = kb.locations.find(l => l.name.toLowerCase().trim() === row.name.toLowerCase().trim());
+          if (match && match.lat && match.lng) {
+            updateCoord.run(match.lat, match.lng, row.id);
+          }
+        }
+      });
+      repairAll();
+      console.log(`✅ GPS Repair: fixed ${badLocs.length} locations with invalid coordinates`);
+    }
   }
 
   const tourCount = db.prepare('SELECT COUNT(*) as cnt FROM tour_spaces').get().cnt;
