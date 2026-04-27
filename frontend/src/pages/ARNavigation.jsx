@@ -9,13 +9,30 @@ import './ARNavigation.css';
 // Map COCO-SSD detection classes to campus destinations for contextual AR
 const DEST_TO_CLASSES = {
     'cs-lab': ['laptop', 'tv', 'mouse', 'keyboard', 'cell phone'],
-    'mca': ['laptop', 'tv', 'mouse', 'keyboard', 'cell phone'], // Map MCA to same as CS lab
+    'mca': ['laptop', 'tv', 'mouse', 'keyboard', 'cell phone'],
     'library': ['book', 'laptop'],
     'canteen': ['cup', 'bottle', 'bowl', 'dining table', 'spoon', 'fork', 'pizza', 'donut', 'cake', 'sandwich', 'hot dog', 'apple'],
     'parking': ['car', 'motorcycle', 'bus', 'truck', 'bicycle'],
     'auditorium': ['person', 'chair', 'bench'],
     'washroom': ['sink', 'toilet'],
     'admin': ['laptop', 'keyboard', 'book']
+};
+
+// Hardcoded GPS fallback — used if DB has wrong/zero coordinates
+// These are real-world approximate coords for SCET Surat campus
+const CAMPUS_GPS_COORDS = {
+    'Computer Lab 1':       { lat: 21.183742, lng: 72.814352 },
+    'Computer Lab 2':       { lat: 21.183745, lng: 72.814355 },
+    'IT Lab':               { lat: 21.183750, lng: 72.814360 },
+    'Library':              { lat: 21.183610, lng: 72.814100 },
+    'Auditorium':           { lat: 21.183492, lng: 72.814392 },
+    'Canteen':              { lat: 21.183300, lng: 72.814500 },
+    'Parking':              { lat: 21.183200, lng: 72.814200 },
+    'Washroom (CS Block)':  { lat: 21.183700, lng: 72.814300 },
+    'Admin Office':         { lat: 21.183400, lng: 72.814400 },
+    'Placement Cell':       { lat: 21.183410, lng: 72.814410 },
+    'Medical Room':         { lat: 21.183420, lng: 72.814420 },
+    'Main Gate':            { lat: 21.183100, lng: 72.814100 },
 };
 
 export default function ARNavigation() {
@@ -188,17 +205,38 @@ export default function ARNavigation() {
 
     // Anchors destination coordinates to a fixed GPS point
     const anchorDestination = (id, upos) => {
-        // Check database for real coordinates first
+        // 1. Check database for real GPS coordinates first
         const dbLoc = dbLocations.find(l => {
             if (l.id === Number(id)) return true;
-            if (typeof id === 'string' && l.name.toLowerCase() === id.toLowerCase()) return true;
+            if (typeof id === 'string' && l.name && l.name.toLowerCase() === id.toLowerCase()) return true;
             return false;
         });
 
-        if (dbLoc && dbLoc.lat !== 0 && dbLoc.lng !== 0) {
+        // Valid GPS range: lat must be -90 to 90, lng -180 to 180, non-zero
+        const isValidGPS = (lat, lng) => lat !== 0 && lng !== 0 && Math.abs(lat) <= 90 && Math.abs(lng) <= 180;
+
+        if (dbLoc && isValidGPS(dbLoc.lat, dbLoc.lng)) {
+            console.log(`AR: Using DB GPS for "${dbLoc.name}": ${dbLoc.lat}, ${dbLoc.lng}`);
             return { lat: dbLoc.lat, lng: dbLoc.lng };
         }
 
+        // 2. Fallback: use hardcoded campus GPS map by name
+        if (dbLoc && CAMPUS_GPS_COORDS[dbLoc.name]) {
+            console.log(`AR: Using hardcoded GPS for "${dbLoc.name}"`);
+            return CAMPUS_GPS_COORDS[dbLoc.name];
+        }
+
+        // 3. Try matching by label directly
+        const labelMatch = Object.keys(CAMPUS_GPS_COORDS).find(
+            k => k.toLowerCase() === (selectedRef.current?.label || '').toLowerCase()
+        );
+        if (labelMatch) {
+            console.log(`AR: Using label-matched GPS for "${labelMatch}"`);
+            return CAMPUS_GPS_COORDS[labelMatch];
+        }
+
+        // 4. Last resort: return user position so distance = 0m (destination unknown)
+        console.warn(`AR: No GPS found for id=${id}, using user position as fallback`);
         return { lat: upos.lat, lng: upos.lng };
     };
     // --- Camera Control Logic ---

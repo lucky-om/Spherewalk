@@ -275,6 +275,29 @@ export default function VirtualTour() {
             pannellumRef.current.on('scenechange', (sceneId) => {
                 setSelectedId(sceneId);
             });
+
+            // Inject watermark INSIDE pannellum container (works in fullscreen too)
+            const existingWm = viewerRef.current.querySelector('.sw-panorama-watermark');
+            if (!existingWm) {
+                const wm = document.createElement('div');
+                wm.className = 'sw-panorama-watermark';
+                wm.style.cssText = [
+                    'position:absolute', 'bottom:0', 'left:0', 'right:0',
+                    'z-index:50', 'pointer-events:none',
+                    'display:flex', 'align-items:center', 'justify-content:center',
+                    'padding:8px 0 10px',
+                    'background:linear-gradient(to top,rgba(0,0,0,0.5) 0%,transparent 100%)',
+                    'font-family:Inter,-apple-system,sans-serif'
+                ].join(';');
+                wm.innerHTML = `
+                    <span style="color:rgba(255,255,255,0.85);font-size:12px;font-weight:600;letter-spacing:0.04em;text-shadow:0 1px 4px rgba(0,0,0,0.9);display:flex;align-items:center;gap:6px;">
+                        &#127760; SphereWalk Campus Explorer
+                        <span style="color:rgba(255,255,255,0.45);font-weight:400;font-size:11px;">&copy; ${new Date().getFullYear()}</span>
+                    </span>
+                `;
+                viewerRef.current.style.position = 'relative';
+                viewerRef.current.appendChild(wm);
+            }
         };
 
 
@@ -351,33 +374,9 @@ export default function VirtualTour() {
                         <span className="crumb-active">{currentTour.name}</span>
                     </div>
 
-                    {/* Panorama viewer with hotspot overlay cards floating on the image */}
+                    {/* Panorama viewer — watermark is injected into this div by JS after pannellum loads (works in fullscreen too) */}
                     <div className="panorama-wrapper" style={{ position: 'relative' }}>
                         <div id="panorama-viewer" ref={viewerRef} />
-
-                        {/* Google Earth-style centered bottom watermark */}
-                        <div style={{
-                            position: 'absolute', bottom: 0, left: 0, right: 0,
-                            zIndex: 20, pointerEvents: 'none',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            padding: '6px 0 8px',
-                            background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)'
-                        }}>
-                            <span style={{
-                                color: 'rgba(255,255,255,0.82)',
-                                fontSize: '12px',
-                                fontWeight: '600',
-                                fontFamily: 'Inter, sans-serif',
-                                letterSpacing: '0.04em',
-                                textShadow: '0 1px 4px rgba(0,0,0,0.9)',
-                                display: 'flex', alignItems: 'center', gap: '6px'
-                            }}>
-                                🌐 SphereWalk Campus Explorer
-                                <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: '400', fontSize: '11px' }}>
-                                    © {new Date().getFullYear()}
-                                </span>
-                            </span>
-                        </div>
 
                         {/* Hotspot cards overlaid on the panorama image */}
                         <div className="panorama-hotspot-overlay">
