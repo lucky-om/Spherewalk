@@ -177,7 +177,7 @@
     right: 0;
     left: 270px;          /* sidebar width */
     overflow: hidden;
-    background: #dbeafe;
+    background: #0B0F19; /* Updated to dark holographic theme */
 }
 
 /* Mobile: no sidebar */

@@ -58,10 +58,6 @@ export default function ARNavigation() {
     const [videoReady, setVideoReady] = useState(false);
     const [videoStream, setVideoStream] = useState(null);
 
-    useEffect(() => {
-        if (videoRef.current) videoRef.current.muted = true;
-    }, []);
-
     // Real-World Navigation States (GPS + Compass)
     const [userPos, setUserPos] = useState(null);
     const [heading, setHeading] = useState(0);
@@ -309,7 +305,6 @@ export default function ARNavigation() {
 
         if (!cameraActive || !videoStream) return;
 
-        // Wait up to 2 rAF cycles for the video element to appear in DOM
         let cancelled = false;
         const attach = () => {
             const vid = videoRef.current;
@@ -318,29 +313,41 @@ export default function ARNavigation() {
                 return;
             }
 
-            // Force muted (React prop doesn't reliably set the DOM attribute)
+            // iOS Safari critical autoplay requirements
             vid.muted = true;
+            vid.defaultMuted = true;
             vid.playsInline = true;
+            vid.setAttribute('playsinline', '');
 
             if (vid.srcObject !== videoStream) {
                 vid.srcObject = videoStream;
             }
 
-            // Wait for canplay — NEVER call play() immediately after setting srcObject
-            const onCanPlay = () => {
-                vid.play()
-                    .then(() => { setVideoReady(true); drawAR(); })
-                    .catch(e => {
-                        console.warn('play() rejected:', e.name, e.message);
-                        // Force-ready anyway after rejection so HUD still shows
-                        setVideoReady(true);
-                    });
+            // Reliable ready detection
+            const onPlaying = () => {
+                if (cancelled) return;
+                setVideoReady(true);
+                drawAR();
             };
-            vid.addEventListener('canplay', onCanPlay, { once: true });
 
-            // 6-second nuclear fallback — ensures AR never stays black
-            const t = setTimeout(() => { setVideoReady(true); drawAR(); }, 6000);
-            return () => { vid.removeEventListener('canplay', onCanPlay); clearTimeout(t); };
+            vid.addEventListener('playing', onPlaying, { once: true });
+            
+            // Try to force play, ignore errors since autoPlay should catch it
+            const playPromise = vid.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => console.warn('AR: Direct play() blocked, relying on autoPlay attribute', e));
+            }
+
+            // 5-second nuclear fallback
+            const t = setTimeout(() => {
+                if (!cancelled) {
+                    console.log('AR: Nuclear fallback triggered');
+                    setVideoReady(true);
+                    drawAR();
+                }
+            }, 5000);
+
+            return () => { vid.removeEventListener('playing', onPlaying); clearTimeout(t); };
         };
 
         requestAnimationFrame(attach);
@@ -348,15 +355,6 @@ export default function ARNavigation() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cameraActive, videoStream, virtualCamera]);
 
-
-    const handleVideoMetadata = () => {
-        if (videoRef.current) {
-            videoRef.current.play().then(() => {
-                setVideoReady(true);
-                drawAR();
-            }).catch(e => console.error('Play failed:', e));
-        }
-    };
 
     const switchCamera = (dir = 1) => {
         if (devices.length < 2) return;
@@ -617,14 +615,14 @@ export default function ARNavigation() {
         <div className="ar-view">
             <style>{`.sphere-guide-fab { display: none !important; }`}</style>
 
-            {/* Camera feed — always visible, remove opacity toggling that caused black screen */}
+            {/* Camera feed — always visible, iOS strictly requires these exact attributes */}
             <video
                 ref={videoRef}
                 className="ar-video"
                 autoPlay
                 playsInline
+                webkit-playsinline="true"
                 muted
-                onLoadedMetadata={handleVideoMetadata}
                 style={{ transform: isMirrored ? 'scaleX(-1)' : 'none' }}
             />
             <canvas ref={canvasRef} className="ar-canvas" />

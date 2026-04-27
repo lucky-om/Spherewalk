@@ -367,26 +367,26 @@ function Map3D({ buildings, selected, onSelect }) {
     const [hov, setHov] = useState(null);
     return (
         // Parent .map-container has height:calc(100vh - 64px) in CSS — height:100% works
-        <div style={{ width: '100%', height: '100%', position: 'relative', background: '#dbeafe' }}>
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: '#0B0F19' }}>
             <Canvas
                 shadows
                 camera={{ position: [25, 45, 60], fov: 45 }}
                 style={{ width: '100%', height: '100%', display: 'block' }}
             >
-                <color attach="background" args={['#dbeafe']} />
-                <fog attach="fog" args={['#dbeafe', 80, 160]} />
-                <ambientLight intensity={0.7} />
-                <hemisphereLight args={['#bfdbfe', '#86efac', 0.5]} />
-                <directionalLight castShadow position={[30, 50, -20]} intensity={1.2}
-                    shadow-mapSize={[1024, 1024]}
+                <color attach="background" args={['#0B0F19']} />
+                <fog attach="fog" args={['#0B0F19', 40, 150]} />
+                <ambientLight intensity={0.4} />
+                <hemisphereLight args={['#4f46e5', '#0f172a', 0.6]} />
+                <directionalLight castShadow position={[30, 50, -20]} intensity={1.5} color="#c7d2fe"
+                    shadow-mapSize={[2048, 2048]}
                     shadow-camera-left={-40} shadow-camera-right={40}
                     shadow-camera-top={40} shadow-camera-bottom={-40} />
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow onClick={() => onSelect(null)}>
-                    <planeGeometry args={[120, 120]} />
-                    <meshStandardMaterial color="#d1fae5" />
+                    <planeGeometry args={[150, 150]} />
+                    <meshStandardMaterial color="#111827" roughness={0.8} />
                 </mesh>
-                <gridHelper args={[100, 50, '#c7d2fe', '#e0e7ff']} position={[0, 0.01, 0]} />
-                <ContactShadows resolution={512} scale={60} blur={3} opacity={0.25} far={10} color="#000" />
+                <gridHelper args={[150, 75, '#312e81', '#1e1b4b']} position={[0, 0.01, 0]} />
+                <ContactShadows resolution={1024} scale={80} blur={2.5} opacity={0.6} far={15} color="#000" />
                 {buildings.map(b => (
                     <BuildingMesh key={b.id} b={b}
                         isSel={selected?.id === b.id} isHov={hov === b.id}
@@ -394,7 +394,7 @@ function Map3D({ buildings, selected, onSelect }) {
                 ))}
                 <OrbitControls makeDefault
                     minPolarAngle={0} maxPolarAngle={Math.PI / 2 - 0.05}
-                    minDistance={10} maxDistance={80}
+                    minDistance={10} maxDistance={90}
                     target={selected ? [
                         (selected.gx * GS) + (selected.gw * GS / 2) - 15, 0,
                         (selected.gy * GS) + (selected.gd * GS / 2) - 18
