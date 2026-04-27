@@ -183,8 +183,14 @@
 /* Mobile: no sidebar */
 @media (max-width: 768px) {
     .map-container {
-        left: 0;
-        top: 52px;         /* mobile tab bar height */
+        position: relative; /* Revert to flow layout on mobile */
+        left: auto;
+        top: auto;
+        bottom: auto;
+        right: auto;
+        flex: 1;
+        width: 100%;
+        min-height: 50vh;
     }
 }
 

@@ -460,7 +460,7 @@
     height: 100vh;
     background: #000;
     overflow: hidden;
-    z-index: 999;
+    z-index: 9999; /* Fix overlapping by other app elements like Navbar */
 }
 
 .ar-video {
