@@ -1,6 +1,6 @@
 /* SphereWalk Campus Explorer | v2.0 | Green Node Team */
 /* Coded by Lucky */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLocations, logSearch } from '../services/api';
 import { Canvas } from '@react-three/fiber';
@@ -365,80 +365,91 @@ function BuildingMesh({ b, isSel, isHov, onSelect, setHov }) {
 
 function Map3D({ buildings, selected, onSelect }) {
     const [hov, setHov] = useState(null);
+    const containerRef = useRef(null);
+    const [dims, setDims] = useState({ w: 0, h: 0 });
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+        const ro = new ResizeObserver(entries => {
+            for (const e of entries) {
+                const { width, height } = e.contentRect;
+                setDims({ w: Math.floor(width), h: Math.floor(height) });
+            }
+        });
+        ro.observe(containerRef.current);
+        // Set initial size immediately
+        setDims({
+            w: containerRef.current.offsetWidth,
+            h: containerRef.current.offsetHeight
+        });
+        return () => ro.disconnect();
+    }, []);
 
     return (
-        <div style={{ position: 'absolute', inset: 0, minHeight: '400px' }}>
-            <Canvas
-                shadows
-                camera={{ position: [25, 45, 60], fov: 45 }}
-                style={{ width: '100%', height: '100%', display: 'block' }}
-            >
-                {/* Sky blue background */}
-                <color attach="background" args={['#dbeafe']} />
-                <fog attach="fog" args={['#dbeafe', 60, 150]} />
-
-                {/* Lighting */}
-                <ambientLight intensity={0.5} />
-                <hemisphereLight skyColor="#bfdbfe" groundColor="#86efac" intensity={0.6} />
-                <directionalLight
-                    castShadow
-                    position={[30, 50, -20]}
-                    intensity={1.2}
-                    shadow-mapSize={[2048, 2048]}
-                    shadow-camera-left={-30}
-                    shadow-camera-right={30}
-                    shadow-camera-top={30}
-                    shadow-camera-bottom={-30}
-                />
-
-                {/* Ground Plane */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow onClick={() => onSelect(null)}>
-                    <planeGeometry args={[100, 100]} />
-                    <meshStandardMaterial color="#f0fdf4" />
-                </mesh>
-
-                {/* Grid Helper */}
-                <gridHelper args={[100, 50, '#d1d5db', '#e5e7eb']} position={[0, 0, 0]} />
-
-                {/* Shadows beneath buildings */}
-                <ContactShadows resolution={1024} scale={60} blur={2} opacity={0.4} far={10} color="#000000" />
-
-                {/* Render All Buildings */}
-                {buildings.map(b => (
-                    <BuildingMesh
-                        key={b.id}
-                        b={b}
-                        isSel={selected?.id === b.id}
-                        isHov={hov === b.id}
-                        onSelect={onSelect}
-                        setHov={setHov}
+        <div ref={containerRef} style={{ width: '100%', height: '100%', minHeight: '500px', position: 'relative', overflow: 'hidden', background: '#dbeafe' }}>
+            {dims.h > 0 && (
+                <Canvas
+                    shadows
+                    camera={{ position: [25, 45, 60], fov: 45 }}
+                    style={{ position: 'absolute', top: 0, left: 0, width: `${dims.w}px`, height: `${dims.h}px` }}
+                >
+                    <color attach="background" args={['#dbeafe']} />
+                    <fog attach="fog" args={['#dbeafe', 60, 150]} />
+                    <ambientLight intensity={0.6} />
+                    <hemisphereLight args={['#bfdbfe', '#86efac', 0.6]} />
+                    <directionalLight
+                        castShadow
+                        position={[30, 50, -20]}
+                        intensity={1.2}
+                        shadow-mapSize={[2048, 2048]}
+                        shadow-camera-left={-30}
+                        shadow-camera-right={30}
+                        shadow-camera-top={30}
+                        shadow-camera-bottom={-30}
                     />
-                ))}
 
-                {/* Controls (360 Rotation, Zoom, Pan) */}
-                <OrbitControls
-                    makeDefault
-                    minPolarAngle={0}
-                    maxPolarAngle={Math.PI / 2 - 0.1}
-                    minDistance={10}
-                    maxDistance={80}
-                    target={selected ? [
-                        (selected.gx * GS) + (selected.gw * GS / 2) - 15,
-                        0,
-                        (selected.gy * GS) + (selected.gd * GS / 2) - 18
-                    ] : [20, 0, 20]}
-                />
-            </Canvas>
+                    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow onClick={() => onSelect(null)}>
+                        <planeGeometry args={[100, 100]} />
+                        <meshStandardMaterial color="#d1fae5" />
+                    </mesh>
 
-            {/* Overlay UI */}
+                    <gridHelper args={[100, 50, '#d1d5db', '#e5e7eb']} position={[0, 0, 0]} />
+                    <ContactShadows resolution={1024} scale={60} blur={2} opacity={0.3} far={10} color="#000000" />
+
+                    {buildings.map(b => (
+                        <BuildingMesh
+                            key={b.id}
+                            b={b}
+                            isSel={selected?.id === b.id}
+                            isHov={hov === b.id}
+                            onSelect={onSelect}
+                            setHov={setHov}
+                        />
+                    ))}
+
+                    <OrbitControls
+                        makeDefault
+                        minPolarAngle={0}
+                        maxPolarAngle={Math.PI / 2 - 0.05}
+                        minDistance={10}
+                        maxDistance={80}
+                        target={selected ? [
+                            (selected.gx * GS) + (selected.gw * GS / 2) - 15,
+                            0,
+                            (selected.gy * GS) + (selected.gd * GS / 2) - 18
+                        ] : [20, 0, 20]}
+                    />
+                </Canvas>
+            )}
+
+            {/* Overlay hint */}
             <div style={{
-                position: 'absolute', bottom: '20px', left: '20px',
-                background: 'rgba(255,255,255,0.9)', padding: '12px 16px', borderRadius: '8px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)', pointerEvents: 'none'
+                position: 'absolute', bottom: '16px', left: '16px',
+                background: 'rgba(255,255,255,0.92)', padding: '10px 14px', borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)', pointerEvents: 'none', zIndex: 5
             }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#111827' }}>SMART CAMPUS — 3D BLOCK VIEW</div>
-                <div style={{ fontSize: '0.75rem', color: '#4b5563', marginTop: '4px' }}>Left Click + Drag to rotate 360°</div>
-                <div style={{ fontSize: '0.75rem', color: '#4b5563' }}>Right Click + Drag to pan • Scroll to zoom</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '800', color: '#1e293b' }}>SMART CAMPUS — 3D VIEW</div>
+                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px' }}>Drag to rotate · Scroll to zoom · Right-drag to pan</div>
             </div>
         </div>
     );

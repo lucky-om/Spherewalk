@@ -298,27 +298,38 @@ export default function ARNavigation() {
     // Attach stream to video element once it exists in the DOM
     useEffect(() => {
         if (cameraActive && virtualCamera) {
-            console.log("AR_NAV_DEBUG: Virtual Camera Mode, bypassing video...");
             setVideoReady(true);
-            // Delay slightly to ensure canvas is rendered
             setTimeout(drawAR, 100);
         } else if (cameraActive && videoStream && videoRef.current) {
-            console.log("AR_NAV_DEBUG: Video element found, attaching stream...");
-            if (videoRef.current.srcObject !== videoStream) {
-                videoRef.current.srcObject = videoStream;
+            const vid = videoRef.current;
+            if (vid.srcObject !== videoStream) {
+                vid.srcObject = videoStream;
             }
+            // Force play immediately — don't rely only on onLoadedMetadata (unreliable on mobile)
+            vid.play().then(() => {
+                setVideoReady(true);
+                drawAR();
+            }).catch(e => {
+                console.warn('Autoplay blocked, waiting for metadata:', e);
+                // Fallback: wait for metadata event
+            });
+            // Safety timeout: if video still not ready after 3s, force it
+            const timeout = setTimeout(() => {
+                if (!videoRef.current) return;
+                setVideoReady(true);
+                drawAR();
+            }, 3000);
+            return () => clearTimeout(timeout);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cameraActive, videoStream, virtualCamera]);
 
     const handleVideoMetadata = () => {
-        console.log("AR_NAV_DEBUG: Video Metadata Loaded");
         if (videoRef.current) {
             videoRef.current.play().then(() => {
-                console.log("AR_NAV_DEBUG: Video Playing");
                 setVideoReady(true);
                 drawAR();
-            }).catch(e => console.error("Play auto-start failed:", e));
+            }).catch(e => console.error('Play failed:', e));
         }
     };
 
@@ -613,33 +624,44 @@ export default function ARNavigation() {
                 </div>
             )}
 
-            {/* Futuristic AI Overlay */}
-            <div style={{ position: 'absolute', top: 96, left: 24, zIndex: 100, pointerEvents: 'none' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(10, 15, 25, 0.7)', backdropFilter: 'blur(12px)', border: '1px solid rgba(16, 185, 129, 0.5)', color: '#10B981', padding: '8px 16px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold', fontFamily: 'Space Grotesk, sans-serif', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.2)' }}>
-                    <span style={{ width: '8px', height: '8px', background: '#10B981', borderRadius: '50%', animation: 'pulse-danger 2s infinite', boxShadow: '0 0 12px #10B981' }}></span>
-                    VISION AI COCO-SSD
+            {/* ── Top HUD Overlay ─ no overlapping on mobile ── */}
+            <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0,
+                zIndex: 100, pointerEvents: 'none',
+                display: 'flex', flexDirection: 'column', gap: '6px',
+                padding: '80px 12px 8px'
+            }}>
+                {/* Row 1: AI badge + camera controls */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', border: '1px solid rgba(16,185,129,0.5)', color: '#10B981', padding: '6px 12px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold', pointerEvents: 'none' }}>
+                        <span style={{ width: '7px', height: '7px', background: '#10B981', borderRadius: '50%', boxShadow: '0 0 10px #10B981', flexShrink: 0 }} />
+                        VISION AI
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', pointerEvents: 'all' }}>
+                        {devices.length > 1 && (
+                            <button className="ar-ctrl" onClick={() => switchCamera()} style={{ background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', padding: '6px 12px', fontSize: '11px' }}>
+                                🔄 Cam
+                            </button>
+                        )}
+                        <button className="ar-ctrl" onClick={() => setIsMirrored(!isMirrored)} style={{ background: 'rgba(10,15,25,0.75)', backdropFilter: 'blur(12px)', padding: '6px 12px', fontSize: '11px' }}>
+                            {isMirrored ? '🔃 Normal' : '🔄 Mirror'}
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Camera Options */}
-            <div style={{ position: 'absolute', top: 96, right: 24, zIndex: 100, display: 'flex', gap: '8px' }}>
-                {devices.length > 1 && (
-                    <button className="ar-ctrl" onClick={() => switchCamera()} title="Switch Camera" style={{ background: 'rgba(10, 15, 25, 0.7)', backdropFilter: 'blur(12px)' }}>
-                        Switch Camera
-                    </button>
-                )}
-                <button className="ar-ctrl" onClick={() => setIsMirrored(!isMirrored)} title="Toggle Mirror" style={{ background: 'rgba(10, 15, 25, 0.7)', backdropFilter: 'blur(12px)' }}>
-                    {isMirrored ? 'Normal' : 'Mirror'}
-                </button>
-            </div>
-
-            {/* Meter Overlay for Sensors */}
-            <div style={{ position: 'absolute', top: 148, left: 24, zIndex: 100, pointerEvents: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ background: userPos ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)', backdropFilter: 'blur(12px)', color: '#fff', padding: '4px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
-                    {userPos ? 'GPS ACTIVE' : 'SEARCHING GPS...'}
-                </div>
-                <div style={{ background: heading !== 0 ? 'rgba(59, 130, 246, 0.8)' : 'rgba(239, 68, 68, 0.8)', backdropFilter: 'blur(12px)', color: '#fff', padding: '4px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
-                    COMPASS: {Math.round(heading)}°
+                {/* Row 2: GPS + Heading sensor badges */}
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', pointerEvents: 'none' }}>
+                    <div style={{ background: userPos ? 'rgba(16,185,129,0.85)' : 'rgba(239,68,68,0.85)', backdropFilter: 'blur(10px)', color: '#fff', padding: '3px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
+                        {userPos ? '📍 GPS ✔' : '📍 GPS...'}
+                    </div>
+                    <div style={{ background: headingRef.current !== null ? 'rgba(99,102,241,0.85)' : 'rgba(100,100,100,0.85)', backdropFilter: 'blur(10px)', color: '#fff', padding: '3px 10px', borderRadius: '6px', fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.05em' }}>
+                        {headingRef.current !== null ? `🧭 ${Math.round(headingRef.current)}°` : '🧭 No Compass'}
+                    </div>
+                    {userPos && (
+                        <div style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', color: 'rgba(255,255,255,0.7)', padding: '3px 10px', borderRadius: '6px', fontSize: '10px' }}>
+                            {userPos.lat.toFixed(5)}, {userPos.lng.toFixed(5)}
+                        </div>
+                    )}
                 </div>
             </div>
 
