@@ -8,6 +8,7 @@
     display: flex;
     height: calc(100vh - 64px);
     overflow: hidden;
+    position: relative;
 }
 
 /* ─── SIDEBAR ────────────────────── */
@@ -170,13 +171,21 @@
 
 /* ─── MAP CANVAS ─────────────────── */
 .map-container {
-    flex: 1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 270px;          /* sidebar width */
     overflow: hidden;
     background: #dbeafe;
-    position: relative;
-    /* Explicit height so children (Canvas) always get real px */
-    height: calc(100vh - 64px);
-    min-height: 400px;
+}
+
+/* Mobile: no sidebar */
+@media (max-width: 768px) {
+    .map-container {
+        left: 0;
+        top: 52px;         /* mobile tab bar height */
+    }
 }
 
 .campus-svg {
