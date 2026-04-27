@@ -113,7 +113,7 @@ function seedDatabase() {
     const insert = db.prepare('INSERT INTO locations (name, type, floor, building, description, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?)');
     const insertMany = db.transaction((locs) => {
       for (const loc of locs) {
-        insert.run(loc.name, loc.type, loc.floor || 0, loc.building, loc.description || '', loc.x || 0, loc.y || 0);
+        insert.run(loc.name, loc.type, loc.floor || 0, loc.building, loc.description || '', loc.lat || 0, loc.lng || 0);
       }
     });
     insertMany(kb.locations);
