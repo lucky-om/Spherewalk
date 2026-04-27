@@ -410,43 +410,66 @@ export default function ARNavigation() {
             ctx.lineWidth = 1;
             for (let i = 0; i < canvas.height; i += 14) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
 
-            // Floating 3D Arrow (Dynamic size based on distance)
-            const rad = ((angleRef.current - 90) * Math.PI) / 180;
-            const bounce = Math.sin(t * 0.06) * 10;
-            const distFactor = activeDest ? Math.max(0.5, Math.min(1.5, 200 / distRef.current)) : 1;
-            const ax = cx + Math.cos(rad) * (130 * distFactor + bounce);
-            const ay = cy + Math.sin(rad) * (130 * distFactor + bounce);
-
-            for (let r = 32; r >= 12; r -= 8) {
-                ctx.beginPath(); ctx.arc(ax, ay, r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(91,79,233,${(32 - r) / 400})`; ctx.fill();
-            }
-            ctx.save(); ctx.translate(ax, ay); ctx.rotate(rad + Math.PI / 2);
-            ctx.beginPath();
-            ctx.moveTo(0, -22); ctx.lineTo(12, 8); ctx.lineTo(5, 4); ctx.lineTo(5, 22); ctx.lineTo(-5, 22); ctx.lineTo(-5, 4); ctx.lineTo(-12, 8);
-            ctx.closePath();
-            ctx.fillStyle = '#fff'; ctx.shadowBlur = 18; ctx.shadowColor = '#5B4FE9'; ctx.fill(); ctx.restore();
-
-            [1, 2].forEach(i => {
-                ctx.save(); ctx.globalAlpha = 0.3 / i;
-                const ax2 = cx + Math.cos(rad) * (80 - i * 28 + bounce * 0.5);
-                const ay2 = cy + Math.sin(rad) * (80 - i * 28 + bounce * 0.5);
-                ctx.translate(ax2, ay2); ctx.rotate(rad + Math.PI / 2);
-                ctx.beginPath(); ctx.moveTo(0, -12); ctx.lineTo(8, 5); ctx.lineTo(-8, 5); ctx.closePath();
-                ctx.fillStyle = '#fff'; ctx.fill(); ctx.restore();
-            });
-
-            // Destination Label
+            // Only draw arrow when a destination is selected
             if (activeDest) {
+                // Floating 3D Arrow (Dynamic size based on distance)
+                const rad = ((angleRef.current - 90) * Math.PI) / 180;
+                const bounce = Math.sin(t * 0.06) * 10;
+                const distFactor = Math.max(0.5, Math.min(1.5, 200 / (distRef.current || 200)));
+                const ax = cx + Math.cos(rad) * (130 * distFactor + bounce);
+                const ay = cy + Math.sin(rad) * (130 * distFactor + bounce);
+
+                for (let r = 32; r >= 12; r -= 8) {
+                    ctx.beginPath(); ctx.arc(ax, ay, r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(91,79,233,${(32 - r) / 400})`; ctx.fill();
+                }
+                ctx.save(); ctx.translate(ax, ay); ctx.rotate(rad + Math.PI / 2);
+                ctx.beginPath();
+                ctx.moveTo(0, -22); ctx.lineTo(12, 8); ctx.lineTo(5, 4); ctx.lineTo(5, 22); ctx.lineTo(-5, 22); ctx.lineTo(-5, 4); ctx.lineTo(-12, 8);
+                ctx.closePath();
+                ctx.fillStyle = '#fff'; ctx.shadowBlur = 18; ctx.shadowColor = '#5B4FE9'; ctx.fill(); ctx.restore();
+
+                [1, 2].forEach(i => {
+                    ctx.save(); ctx.globalAlpha = 0.3 / i;
+                    const ax2 = cx + Math.cos(rad) * (80 - i * 28 + bounce * 0.5);
+                    const ay2 = cy + Math.sin(rad) * (80 - i * 28 + bounce * 0.5);
+                    ctx.translate(ax2, ay2); ctx.rotate(rad + Math.PI / 2);
+                    ctx.beginPath(); ctx.moveTo(0, -12); ctx.lineTo(8, 5); ctx.lineTo(-8, 5); ctx.closePath();
+                    ctx.fillStyle = '#fff'; ctx.fill(); ctx.restore();
+                });
+
+                // Destination Label
                 const lx = cx + Math.cos(rad) * 168, ly = cy + Math.sin(rad) * 168;
                 ctx.save();
-                const tw = ctx.measureText(activeDest.label).width;
                 ctx.font = 'bold 13px Inter, sans-serif';
+                const tw = ctx.measureText(activeDest.label).width;
                 ctx.fillStyle = 'rgba(0,0,0,0.65)';
                 roundRect(ctx, lx - tw / 2 - 10, ly - 14, tw + 20, 28, 7); ctx.fill();
                 ctx.strokeStyle = 'rgba(91,79,233,0.6)'; ctx.lineWidth = 1; ctx.stroke();
                 ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.fillText(activeDest.label, lx, ly); ctx.restore();
+
+                // No GPS warning
+                if (!upos) {
+                    ctx.save();
+                    ctx.font = 'bold 13px Inter, sans-serif';
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                    const msg = 'Searching GPS...';
+                    const mw = ctx.measureText(msg).width + 24;
+                    roundRect(ctx, cx - mw/2, cy - 80, mw, 32, 8); ctx.fill();
+                    ctx.fillStyle = '#FCD34D'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(msg, cx, cy - 64); ctx.restore();
+                }
+            } else {
+                // No destination selected — draw a pulsing prompt
+                ctx.save();
+                ctx.font = 'bold 14px Inter, sans-serif';
+                const prompt = 'Select a destination above';
+                const pw = ctx.measureText(prompt).width + 32;
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                roundRect(ctx, cx - pw/2, cy - 30, pw, 36, 10); ctx.fill();
+                ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(prompt, cx, cy - 12); ctx.restore();
             }
 
             // Centered Crosshair

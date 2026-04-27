@@ -367,8 +367,8 @@ function Map3D({ buildings, selected, onSelect }) {
     const [hov, setHov] = useState(null);
 
     return (
-        <div style={{ flex: 1, width: '100%', height: '100%', position: 'relative' }}>
-            <Canvas shadows camera={{ position: [25, 45, 60], fov: 45 }}>
+        <div style={{ flex: 1, width: '100%', height: '100%', minHeight: '400px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+            <Canvas shadows camera={{ position: [25, 45, 60], fov: 45 }} style={{ flex: 1, width: '100%', height: '100%' }}>
                 <color attach="background" args={['#f8fafc']} />
                 <ambientLight intensity={0.6} />
                 <directionalLight

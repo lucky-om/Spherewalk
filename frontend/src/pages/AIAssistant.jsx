@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { logSearch, sendChatMessage } from '../services/api';
 import './AIAssistant.css';
 
-const CHIPS = ['Where is Computer Lab?', 'Who is HOD of CS?', 'Placement stats?', 'Upcoming events?', 'Admission fees?', 'Emergency contacts?'];
+const CHIPS = ['🗺️ Where is Computer Lab?', '👥 Who is HOD of CS?', '📅 Upcoming events?', '💰 Admission fees?'];
 
 const STORAGE_KEY = 'spherewalk_chat_history';
 const WELCOME_MSG = { id: 0, role: 'bot', text: 'Hi! I\'m SphereWalk Campus Assistant. Ask me anything about campus locations, events, placements, staff, or navigation!', actions: [] };
@@ -35,6 +35,23 @@ export default function AIAssistant() {
         if (!text?.trim() || loading) return;
         const userText = text.trim();
 
+        // Handle greetings locally without API call
+        const lowerText = userText.toLowerCase();
+        if (/^(hi|hello|hey|howdy|hiya|greetings|sup|what's up|wassup|namaste|hlo|hii|hiii)$/.test(lowerText.replace(/[!?.,]+$/, '').trim())) {
+            const replies = [
+                "👋 Hey there! Welcome to **SphereWalk**! I'm your AI Campus Guide.\n\nI can help you with:\n- 📍 **Locations** — labs, offices, canteen, library\n- 👥 **Staff** — faculty & HOD info\n- 📅 **Events** — upcoming campus events\n- 💰 **Fees** — admission & tuition info\n\nWhat would you like to know?",
+                "Hello! 😊 Great to see you here at **SphereWalk Campus Explorer**!\n\nAsk me anything about the campus — locations, staff, events, or placements. How can I help?",
+                "Hi! 🌟 I'm the SphereWalk AI Assistant.\n\nTry asking me: *'Where is the canteen?'* or *'Who is the HOD of CS?'*",
+            ];
+            const reply = replies[Math.floor(Math.random() * replies.length)];
+            setMessages(prev => [...prev, 
+                { id: Date.now(), role: 'user', text: userText, actions: [] },
+                { id: Date.now() + 1, role: 'bot', text: reply, actions: [] }
+            ]);
+            setInput('');
+            return;
+        }
+
         const newMessages = [...messages, { id: Date.now(), role: 'user', text: userText, actions: [] }];
         setMessages(newMessages);
         setInput('');
@@ -44,9 +61,6 @@ export default function AIAssistant() {
         logSearch(userText).catch((err) => { console.warn("Analytics log failed", err); });
 
         try {
-            // Build message history for the API (only user/bot messages in text form)
-            // Limit to last 10 messages to prevent 400 Bad Request (max 20)
-            // Truncate long bot replies to prevent 400 Bad Request (max 2000 chars)
             const history = newMessages
                 .map(m => ({ role: m.role === 'user' ? 'user' : 'bot', text: m.text.substring(0, 1900) }))
                 .slice(-10);
@@ -58,8 +72,8 @@ export default function AIAssistant() {
             console.error('Chat error:', err);
             const errMsg = err?.response?.data?.error || '';
             const msg = errMsg.includes('quota')
-                ? 'The AI quota has been exceeded for today. Please generate a new Gemini API key at aistudio.google.com and restart the backend.'
-                : 'Sorry, there was an error connecting to the AI. Please make sure the backend is running on port 5000 and try again.';
+                ? '⚠️ The AI quota has been exceeded for today. Please try again tomorrow.'
+                : '⚠️ Unable to reach the backend. Please check your internet connection and try again.';
             setMessages(prev => [
                 ...prev,
                 { id: Date.now() + 1, role: 'bot', text: msg, actions: [] }
