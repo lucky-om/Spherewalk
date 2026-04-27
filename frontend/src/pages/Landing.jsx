@@ -374,7 +374,7 @@ export default function Landing() {
                     <div className="footer-col">
                         <h5 className="footer-col-title">Navigate</h5>
                         <ul>
-                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/#">Home</Link></li>
                             <li><Link to="/campus-map">Campus Map</Link></li>
                             <li><Link to="/visitor-tour">Visitor Tour</Link></li>
                         </ul>

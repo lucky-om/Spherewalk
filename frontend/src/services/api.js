@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
-    return import.meta.env.VITE_API_URL || 'https://your-backend-url.onrender.com';
+    return import.meta.env.VITE_API_URL || 'https://spherewalk.onrender.com';
 };
 
 export const API_BASE_URL = getBaseUrl();

@@ -94,12 +94,6 @@ export default function ARNavigation() {
                 // Start GPS tracking
                 startGPS();
 
-                // List available video devices
-                const allDevices = await navigator.mediaDevices.enumerateDevices();
-                const videoDevices = allDevices.filter(d => d.kind === 'videoinput');
-                setDevices(videoDevices);
-                if (videoDevices.length > 0) setCurrentDeviceId(videoDevices[0].deviceId);
-
                 await tf.ready();
                 const loadedModel = await cocoSsd.load();
                 modelRef.current = loadedModel;
@@ -218,14 +212,19 @@ export default function ARNavigation() {
 
             const constraints = currentDeviceId
                 ? { video: { deviceId: { exact: currentDeviceId } } }
-                : { video: { facingMode: 'environment' } };
+                : { video: { facingMode: { ideal: 'environment' } } };
 
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+            // Fetch real devices now that we have permission
+            const allDevices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = allDevices.filter(d => d.kind === 'videoinput');
+            setDevices(videoDevices);
 
             // Check if we're using a front camera to auto-flip
             const track = stream.getVideoTracks()[0];
             const settings = track.getSettings();
-            setIsMirrored(settings.facingMode === 'user' || currentDeviceId.toLowerCase().includes('front'));
+            setIsMirrored(settings.facingMode === 'user' || (currentDeviceId && currentDeviceId.toLowerCase().includes('front')));
 
             setVideoStream(stream);
             setCameraActive(true);
@@ -240,6 +239,9 @@ export default function ARNavigation() {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                     setVideoStream(stream);
                     setCameraActive(true);
+                    
+                    const allDevices = await navigator.mediaDevices.enumerateDevices();
+                    setDevices(allDevices.filter(d => d.kind === 'videoinput'));
                     return;
                 } catch {
                     setCamError('Could not start any camera source. Falling back to Virtual Mode.');
@@ -314,25 +316,10 @@ export default function ARNavigation() {
             let currentHeading = headingRef.current;
             const activeDest = selectedRef.current;
 
-            // FAKE FALLBACK: If no GPS available, pretend we are somewhere on campus
-            if (activeDest && !upos) {
-                upos = { lat: 21.1611, lng: 72.7836 }; // Mock SCET campus center
-            }
-
             if (activeDest && upos) {
                 // Anchor the destination if not already done
                 if (!targetGPSRef.current) {
-                    let target = anchorDestination(activeDest.id, upos);
-                    
-                    // FAKE FALLBACK: If target is exactly the same as upos (meaning no real DB data), offset it to show a fake distance (e.g. 500m - 2km)
-                    if (target.lat === upos.lat && target.lng === upos.lng) {
-                        const pseudoHash = activeDest.label.length * 15;
-                        const fakeDistDeg = 0.004 + (pseudoHash % 10) * 0.001; // ~400m to ~1.4km
-                        const fakeAngle = (pseudoHash * 13) % 360;
-                        target.lat += fakeDistDeg * Math.cos(fakeAngle);
-                        target.lng += fakeDistDeg * Math.sin(fakeAngle);
-                    }
-                    targetGPSRef.current = target;
+                    targetGPSRef.current = anchorDestination(activeDest.id, upos);
                 }
 
                 if (targetGPSRef.current && typeof targetGPSRef.current.lat === 'number' && typeof targetGPSRef.current.lng === 'number') {

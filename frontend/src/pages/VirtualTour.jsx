@@ -352,8 +352,12 @@ export default function VirtualTour() {
                     </div>
 
                     {/* Panorama viewer with hotspot overlay cards floating on the image */}
-                    <div className="panorama-wrapper">
+                    <div className="panorama-wrapper" style={{ position: 'relative' }}>
                         <div id="panorama-viewer" ref={viewerRef} />
+                        
+                        <div style={{ position: 'absolute', bottom: '10px', right: '10px', color: 'rgba(255,255,255,0.6)', fontSize: '12px', zIndex: 10, pointerEvents: 'none', textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+                            &copy; SphereWalk {new Date().getFullYear()}
+                        </div>
 
                         {/* Hotspot cards overlaid on the panorama image */}
                         <div className="panorama-hotspot-overlay">
