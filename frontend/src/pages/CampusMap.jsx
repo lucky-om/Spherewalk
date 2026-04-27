@@ -367,9 +367,14 @@ function Map3D({ buildings, selected, onSelect }) {
     const [hov, setHov] = useState(null);
 
     return (
-        <div style={{ flex: 1, width: '100%', height: '100%', minHeight: '400px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-            <Canvas shadows camera={{ position: [25, 45, 60], fov: 45 }} style={{ flex: 1, width: '100%', height: '100%' }}>
-                <color attach="background" args={['#f8fafc']} />
+        <div style={{ position: 'absolute', inset: 0, minHeight: '400px' }}>
+            <Canvas
+                shadows
+                camera={{ position: [25, 45, 60], fov: 45 }}
+                style={{ width: '100%', height: '100%', display: 'block' }}
+                gl={{ antialias: true, alpha: false }}
+                onCreated={({ gl }) => { gl.setClearColor('#f8fafc'); }}
+            >
                 <ambientLight intensity={0.6} />
                 <directionalLight
                     castShadow
@@ -381,8 +386,6 @@ function Map3D({ buildings, selected, onSelect }) {
                     shadow-camera-top={30}
                     shadow-camera-bottom={-30}
                 />
-
-                {/* Environment soft lighting removed to prevent external HDR fetching */}
 
                 {/* Ground Plane */}
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow onClick={() => onSelect(null)}>
@@ -412,15 +415,14 @@ function Map3D({ buildings, selected, onSelect }) {
                 <OrbitControls
                     makeDefault
                     minPolarAngle={0}
-                    maxPolarAngle={Math.PI / 2 - 0.1} // Prevent going below ground
+                    maxPolarAngle={Math.PI / 2 - 0.1}
                     minDistance={10}
                     maxDistance={80}
-                    // Auto-focus gently on selected building
                     target={selected ? [
                         (selected.gx * GS) + (selected.gw * GS / 2) - 15,
                         0,
                         (selected.gy * GS) + (selected.gd * GS / 2) - 18
-                    ] : [20, 0, 20]} // Center of the campus if nothing selected
+                    ] : [20, 0, 20]}
                 />
             </Canvas>
 
