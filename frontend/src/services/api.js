@@ -3,6 +3,10 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
+    // Force the live backend URL in production, regardless of Vercel env variables
+    if (import.meta.env.PROD) {
+        return 'https://spherewalk.onrender.com';
+    }
     return import.meta.env.VITE_API_URL || 'https://spherewalk.onrender.com';
 };
 
