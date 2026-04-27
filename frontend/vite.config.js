@@ -11,6 +11,9 @@ export default defineConfig(() => {
     server: {
       host: true, // This allows your phone to connect to your laptop's IP
       port: 5173
+    },
+    build: {
+      chunkSizeWarningLimit: 1500
     }
   }
 })
