@@ -365,95 +365,54 @@ function BuildingMesh({ b, isSel, isHov, onSelect, setHov }) {
 
 function Map3D({ buildings, selected, onSelect }) {
     const [hov, setHov] = useState(null);
-    const containerRef = useRef(null);
-    const [dims, setDims] = useState({ w: window.innerWidth, h: window.innerHeight - 64 });
-
-    useEffect(() => {
-        // Use rAF to ensure DOM has been painted before measuring
-        const measure = () => {
-            const el = containerRef.current;
-            if (!el) return;
-            const w = el.offsetWidth || window.innerWidth - 270;
-            const h = el.offsetHeight || (window.innerHeight - 64);
-            setDims({ w: Math.max(w, 300), h: Math.max(h, 400) });
-        };
-
-        requestAnimationFrame(() => requestAnimationFrame(measure));
-
-        const ro = new ResizeObserver(measure);
-        if (containerRef.current) ro.observe(containerRef.current);
-        window.addEventListener('resize', measure);
-        return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
-    }, []);
-
     return (
-        <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#dbeafe' }}>
+        // Parent .map-container has height:calc(100vh - 64px) in CSS — height:100% works
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: '#dbeafe' }}>
             <Canvas
                 shadows
                 camera={{ position: [25, 45, 60], fov: 45 }}
-                style={{ position: 'absolute', top: 0, left: 0, width: `${dims.w}px`, height: `${dims.h}px` }}
+                style={{ width: '100%', height: '100%', display: 'block' }}
             >
                 <color attach="background" args={['#dbeafe']} />
                 <fog attach="fog" args={['#dbeafe', 80, 160]} />
-                <ambientLight intensity={0.6} />
-                <hemisphereLight args={['#bfdbfe', '#86efac', 0.6]} />
-                <directionalLight
-                    castShadow
-                    position={[30, 50, -20]}
-                    intensity={1.2}
-                    shadow-mapSize={[2048, 2048]}
-                    shadow-camera-left={-30}
-                    shadow-camera-right={30}
-                    shadow-camera-top={30}
-                    shadow-camera-bottom={-30}
-                />
-
+                <ambientLight intensity={0.7} />
+                <hemisphereLight args={['#bfdbfe', '#86efac', 0.5]} />
+                <directionalLight castShadow position={[30, 50, -20]} intensity={1.2}
+                    shadow-mapSize={[1024, 1024]}
+                    shadow-camera-left={-40} shadow-camera-right={40}
+                    shadow-camera-top={40} shadow-camera-bottom={-40} />
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]} receiveShadow onClick={() => onSelect(null)}>
                     <planeGeometry args={[120, 120]} />
                     <meshStandardMaterial color="#d1fae5" />
                 </mesh>
-
-                <gridHelper args={[100, 50, '#d1d5db', '#e5e7eb']} position={[0, 0, 0]} />
-                <ContactShadows resolution={1024} scale={60} blur={2} opacity={0.3} far={10} color="#000000" />
-
+                <gridHelper args={[100, 50, '#c7d2fe', '#e0e7ff']} position={[0, 0.01, 0]} />
+                <ContactShadows resolution={512} scale={60} blur={3} opacity={0.25} far={10} color="#000" />
                 {buildings.map(b => (
-                    <BuildingMesh
-                        key={b.id}
-                        b={b}
-                        isSel={selected?.id === b.id}
-                        isHov={hov === b.id}
-                        onSelect={onSelect}
-                        setHov={setHov}
-                    />
+                    <BuildingMesh key={b.id} b={b}
+                        isSel={selected?.id === b.id} isHov={hov === b.id}
+                        onSelect={onSelect} setHov={setHov} />
                 ))}
-
-                <OrbitControls
-                    makeDefault
-                    minPolarAngle={0}
-                    maxPolarAngle={Math.PI / 2 - 0.05}
-                    minDistance={10}
-                    maxDistance={80}
+                <OrbitControls makeDefault
+                    minPolarAngle={0} maxPolarAngle={Math.PI / 2 - 0.05}
+                    minDistance={10} maxDistance={80}
                     target={selected ? [
-                        (selected.gx * GS) + (selected.gw * GS / 2) - 15,
-                        0,
+                        (selected.gx * GS) + (selected.gw * GS / 2) - 15, 0,
                         (selected.gy * GS) + (selected.gd * GS / 2) - 18
-                    ] : [20, 0, 20]}
-                />
+                    ] : [20, 0, 20]} />
             </Canvas>
-
-            {/* Overlay hint */}
             <div style={{
-                position: 'absolute', bottom: '16px', left: '16px',
-                background: 'rgba(255,255,255,0.92)', padding: '10px 14px', borderRadius: '8px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)', pointerEvents: 'none', zIndex: 5
+                position: 'absolute', bottom: 16, left: 16, zIndex: 5,
+                background: 'rgba(255,255,255,0.92)', padding: '10px 14px',
+                borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.12)', pointerEvents: 'none'
             }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: '800', color: '#1e293b' }}>🏫 SMART CAMPUS — 3D VIEW</div>
-                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px' }}>Drag to rotate · Scroll to zoom · Right-drag to pan</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1e293b' }}>🏫 SMART CAMPUS — 3D VIEW</div>
+                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: 3 }}>Drag · Scroll to zoom · Right-drag to pan</div>
             </div>
         </div>
     );
 }
 // ─── 2D FLAT MAP ─────────────────────────────────────────────────
+
 const FLAT = BUILDINGS.map(b => ({
     id: b.id,
     label: b.label.split(' ')[0], // short label

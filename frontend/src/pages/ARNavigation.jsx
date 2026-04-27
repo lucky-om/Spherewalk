@@ -21,18 +21,18 @@ const DEST_TO_CLASSES = {
 // Hardcoded GPS fallback — used if DB has wrong/zero coordinates
 // These are real-world approximate coords for SCET Surat campus
 const CAMPUS_GPS_COORDS = {
-    'Computer Lab 1':       { lat: 21.183742, lng: 72.814352 },
-    'Computer Lab 2':       { lat: 21.183745, lng: 72.814355 },
-    'IT Lab':               { lat: 21.183750, lng: 72.814360 },
-    'Library':              { lat: 21.183610, lng: 72.814100 },
-    'Auditorium':           { lat: 21.183492, lng: 72.814392 },
-    'Canteen':              { lat: 21.183300, lng: 72.814500 },
-    'Parking':              { lat: 21.183200, lng: 72.814200 },
-    'Washroom (CS Block)':  { lat: 21.183700, lng: 72.814300 },
-    'Admin Office':         { lat: 21.183400, lng: 72.814400 },
-    'Placement Cell':       { lat: 21.183410, lng: 72.814410 },
-    'Medical Room':         { lat: 21.183420, lng: 72.814420 },
-    'Main Gate':            { lat: 21.183100, lng: 72.814100 },
+    'Computer Lab 1': { lat: 21.183742, lng: 72.814352 },
+    'Computer Lab 2': { lat: 21.183745, lng: 72.814355 },
+    'IT Lab': { lat: 21.183750, lng: 72.814360 },
+    'Library': { lat: 21.183610, lng: 72.814100 },
+    'Auditorium': { lat: 21.183492, lng: 72.814392 },
+    'Canteen': { lat: 21.183300, lng: 72.814500 },
+    'Parking': { lat: 21.183200, lng: 72.814200 },
+    'Washroom (CS Block)': { lat: 21.183700, lng: 72.814300 },
+    'Admin Office': { lat: 21.183400, lng: 72.814400 },
+    'Placement Cell': { lat: 21.183410, lng: 72.814410 },
+    'Medical Room': { lat: 21.183420, lng: 72.814420 },
+    'Main Gate': { lat: 21.183100, lng: 72.814100 },
 };
 
 export default function ARNavigation() {
@@ -57,6 +57,10 @@ export default function ARNavigation() {
     // Camera & Rendering Lifecycle
     const [videoReady, setVideoReady] = useState(false);
     const [videoStream, setVideoStream] = useState(null);
+
+    useEffect(() => {
+        if (videoRef.current) videoRef.current.muted = true;
+    }, []);
 
     // Real-World Navigation States (GPS + Compass)
     const [userPos, setUserPos] = useState(null);
@@ -277,7 +281,7 @@ export default function ARNavigation() {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                     setVideoStream(stream);
                     setCameraActive(true);
-                    
+
                     const allDevices = await navigator.mediaDevices.enumerateDevices();
                     setDevices(allDevices.filter(d => d.kind === 'videoinput'));
                     return;
@@ -300,29 +304,50 @@ export default function ARNavigation() {
         if (cameraActive && virtualCamera) {
             setVideoReady(true);
             setTimeout(drawAR, 100);
-        } else if (cameraActive && videoStream && videoRef.current) {
+            return;
+        }
+
+        if (!cameraActive || !videoStream) return;
+
+        // Wait up to 2 rAF cycles for the video element to appear in DOM
+        let cancelled = false;
+        const attach = () => {
             const vid = videoRef.current;
+            if (!vid) {
+                if (!cancelled) requestAnimationFrame(attach);
+                return;
+            }
+
+            // Force muted (React prop doesn't reliably set the DOM attribute)
+            vid.muted = true;
+            vid.playsInline = true;
+
             if (vid.srcObject !== videoStream) {
                 vid.srcObject = videoStream;
             }
-            // Force play immediately — don't rely only on onLoadedMetadata (unreliable on mobile)
-            vid.play().then(() => {
-                setVideoReady(true);
-                drawAR();
-            }).catch(e => {
-                console.warn('Autoplay blocked, waiting for metadata:', e);
-                // Fallback: wait for metadata event
-            });
-            // Safety timeout: if video still not ready after 3s, force it
-            const timeout = setTimeout(() => {
-                if (!videoRef.current) return;
-                setVideoReady(true);
-                drawAR();
-            }, 3000);
-            return () => clearTimeout(timeout);
-        }
+
+            // Wait for canplay — NEVER call play() immediately after setting srcObject
+            const onCanPlay = () => {
+                vid.play()
+                    .then(() => { setVideoReady(true); drawAR(); })
+                    .catch(e => {
+                        console.warn('play() rejected:', e.name, e.message);
+                        // Force-ready anyway after rejection so HUD still shows
+                        setVideoReady(true);
+                    });
+            };
+            vid.addEventListener('canplay', onCanPlay, { once: true });
+
+            // 6-second nuclear fallback — ensures AR never stays black
+            const t = setTimeout(() => { setVideoReady(true); drawAR(); }, 6000);
+            return () => { vid.removeEventListener('canplay', onCanPlay); clearTimeout(t); };
+        };
+
+        requestAnimationFrame(attach);
+        return () => { cancelled = true; };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cameraActive, videoStream, virtualCamera]);
+
 
     const handleVideoMetadata = () => {
         if (videoRef.current) {
@@ -377,10 +402,10 @@ export default function ARNavigation() {
 
                     const relativeAngle = (targetBearing - currentHeading + 360) % 360;
                     angleRef.current = isNaN(relativeAngle) ? 0 : relativeAngle;
-                    
+
                     // Only update React state if distance changed significantly to prevent render lag
                     if (!isNaN(realDist) && (Math.abs(distRef.current - realDist) > 1 || distRef.current === 0)) {
-                        setDistance(Math.round(realDist)); 
+                        setDistance(Math.round(realDist));
                         distRef.current = realDist;
                     }
                 }
@@ -505,7 +530,7 @@ export default function ARNavigation() {
                     ctx.fillStyle = 'rgba(0,0,0,0.7)';
                     const msg = 'Searching GPS...';
                     const mw = ctx.measureText(msg).width + 24;
-                    roundRect(ctx, cx - mw/2, cy - 80, mw, 32, 8); ctx.fill();
+                    roundRect(ctx, cx - mw / 2, cy - 80, mw, 32, 8); ctx.fill();
                     ctx.fillStyle = '#FCD34D'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                     ctx.fillText(msg, cx, cy - 64); ctx.restore();
                 }
@@ -516,7 +541,7 @@ export default function ARNavigation() {
                 const prompt = 'Select a destination above';
                 const pw = ctx.measureText(prompt).width + 32;
                 ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                roundRect(ctx, cx - pw/2, cy - 30, pw, 36, 10); ctx.fill();
+                roundRect(ctx, cx - pw / 2, cy - 30, pw, 36, 10); ctx.fill();
                 ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.fillText(prompt, cx, cy - 12); ctx.restore();
             }
