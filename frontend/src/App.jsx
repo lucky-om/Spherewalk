@@ -2,6 +2,7 @@
 /* Coded by Lucky */
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import SphereGuideFAB from './components/SphereGuideFAB';
 import Landing from './pages/Landing';
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="/terms-of-use" element={<TermsOfUse />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
+      <SpeedInsights />
     </BrowserRouter>
   );
 }
